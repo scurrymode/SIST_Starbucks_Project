@@ -16,7 +16,7 @@ public class DBManager {
 	private static DBManager instance;
 	private String driver="org.mariadb.jdbc.Driver";
 	private String url="jdbc:mariadb://211.238.142.117:3306/starbucks";
-	private String user="starbucks";
+	private String user="root";
 	private String password="1234";
 	private Connection con;
 	

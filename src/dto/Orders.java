@@ -1,14 +1,16 @@
 package dto;
 
+import java.sql.Timestamp;
+
 public class Orders {
-	private int orders_id;
-	private int product_id;
-	private String orders_date;
-	private int orders_emp_id;
-	private int orders_client_id;
-	private int orders_status;
-	private int orders_payment_type;
-	
+	private int orders_id=1;
+	private int product_id=3;
+	private Timestamp orders_date=new Timestamp(1492040411581L);
+	private int orders_emp_id=2;
+	private int orders_client_id=1;
+	private String orders_status="ready"; //0이 준비중
+	private String orders_payment_type;
+	private String orders_type="offline";
 	
 	public int getOrders_id() {
 		return orders_id;
@@ -22,10 +24,10 @@ public class Orders {
 	public void setProduct_id(int product_id) {
 		this.product_id = product_id;
 	}
-	public String getOrders_date() {
+	public Timestamp getOrders_date() {
 		return orders_date;
 	}
-	public void setOrders_date(String orders_date) {
+	public void setOrders_date(Timestamp orders_date) {
 		this.orders_date = orders_date;
 	}
 	public int getOrders_emp_id() {
@@ -40,18 +42,26 @@ public class Orders {
 	public void setOrders_client_id(int orders_client_id) {
 		this.orders_client_id = orders_client_id;
 	}
-	public int getOrders_status() {
+	public String getOrders_status() {
 		return orders_status;
 	}
-	public void setOrders_status(int orders_status) {
+	public void setOrders_status(String orders_status) {
 		this.orders_status = orders_status;
 	}
-	public int getOrders_payment_type() {
+	public String getOrders_payment_type() {
 		return orders_payment_type;
 	}
-	public void setOrders_payment_type(int orders_payment_type) {
+	public void setOrders_payment_type(String orders_payment_type) {
 		this.orders_payment_type = orders_payment_type;
 	}
+	public String getOrders_type() {
+		return orders_type;
+	}
+	public void setOrders_type(String orders_type) {
+		this.orders_type = orders_type;
+	}
+	
+	
 	
 	
 	

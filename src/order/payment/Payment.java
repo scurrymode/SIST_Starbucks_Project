@@ -6,12 +6,18 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.Calendar;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import dto.Orders;
 
 public class Payment extends JFrame implements ActionListener{
 	JPanel p_menu;
@@ -23,20 +29,27 @@ public class Payment extends JFrame implements ActionListener{
 	JTextField t_cash_in, t_cash_cost, t_cash_out;
 	JTextField t_credit_cost, t_credit_number, t_credit_company;
 	JTextField t_coupon_number;
-
-	public Payment() {
+	Orders dto; //주문정보 dto
+	int price;//결제금액
+	JButton bt_card;//카드정보 읽어들이기
+	
+	public Payment(Orders dto, int price) {
+		this.dto=dto;
+		this.price=price;
 		setLayout(new FlowLayout());
 		
 		//각 상황별 패널들
 		p_menu = new JPanel();
-		p_cash = new PaymentPanel(p_menu, "cash");
-		p_credit = new PaymentPanel(p_menu, "credit");
-		p_coupon = new PaymentPanel(p_menu, "coupon");
+		p_cash = new PaymentPanel(this, "cash");
+		p_credit = new PaymentPanel(this, "credit");
+		p_coupon = new PaymentPanel(this, "coupon");
 		
 		//각 버튼들
 		bt_cash = new JButton("현금");
 		bt_credit = new JButton("카드");
 		bt_coupon = new JButton("쿠폰");
+		
+		bt_card = new JButton("카드긁기");
 		
 		//각 라벨들
 		la_cash_in = new JLabel("받은 돈");
@@ -51,10 +64,10 @@ public class Payment extends JFrame implements ActionListener{
 		
 		//각 텍스트필드
 		t_cash_in = new JTextField(18);
-		t_cash_cost = new JTextField(18);
+		t_cash_cost = new JTextField(Integer.toString(price), 18);
 		t_cash_out = new JTextField(18);
 
-		t_credit_cost = new JTextField(18);
+		t_credit_cost = new JTextField(Integer.toString(price), 18);
 		t_credit_number = new JTextField(18);
 		t_credit_company = new JTextField(18);
 		
@@ -62,6 +75,7 @@ public class Payment extends JFrame implements ActionListener{
 		
 		//결제금액은 변경 금지
 		t_cash_cost.setEditable(false);
+		t_cash_out.setEditable(false);
 		t_credit_cost.setEditable(false);
 		
 		//패널들 크기 확정
@@ -69,7 +83,6 @@ public class Payment extends JFrame implements ActionListener{
 		p_cash.setPreferredSize(new Dimension(300,350));
 		p_credit.setPreferredSize(new Dimension(300,350));
 		p_coupon.setPreferredSize(new Dimension(300,350));
-		
 		
 		//메뉴패널 설정
 		p_menu.setLayout(new GridLayout(3, 1));
@@ -92,11 +105,11 @@ public class Payment extends JFrame implements ActionListener{
 		p_credit.p_center.add(t_credit_number);
 		p_credit.p_center.add(la_credit_company);
 		p_credit.p_center.add(t_credit_company);
+		p_credit.p_center.add(bt_card);
 		
 		//쿠폰패널 설정
 		p_coupon.p_center.add(la_coupon_number);
 		p_coupon.p_center.add(t_coupon_number);
-		
 		
 		//색깔설정
 		p_menu.setBackground(Color.BLACK);
@@ -115,12 +128,30 @@ public class Payment extends JFrame implements ActionListener{
 		p_credit.setVisible(false);
 		p_coupon.setVisible(false);
 		
+		
+		//버튼에 리스너 부착
 		bt_cash.addActionListener(this);
 		bt_credit.addActionListener(this);
 		bt_coupon.addActionListener(this);
+		bt_card.addActionListener(this);
+		
+		//텍스트필드에 리스너 부착
+		t_cash_in.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				int key = e.getKeyCode();
+				if(key == KeyEvent.VK_ENTER){
+					int in=Integer.parseInt(t_cash_in.getText());
+					int cost=Integer.parseInt(t_cash_cost.getText());
+					t_cash_out.setText(Integer.toString(in-cost));
+					t_cash_out.updateUI();
+				}
+			}
+		});
+		
 		
 		setSize(300,400);
 		setVisible(true);
+		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
 	}
@@ -131,23 +162,30 @@ public class Payment extends JFrame implements ActionListener{
 		if(obj==bt_cash){
 			p_menu.setVisible(false);
 			p_cash.setVisible(true);
-			p_credit.setVisible(false);
-			p_coupon.setVisible(false);
 		}else if(obj==bt_credit){
 			p_menu.setVisible(false);
-			p_cash.setVisible(false);
 			p_credit.setVisible(true);
-			p_coupon.setVisible(false);
 		}else if(obj==bt_coupon){
 			p_menu.setVisible(false);
-			p_cash.setVisible(false);
-			p_credit.setVisible(false);
 			p_coupon.setVisible(true);
+		}else if(obj==bt_card){
+			cardReader();
 		}
 	}
 	
+	public void cardReader(){
+		String cardNumber = "6258-****-****6048";
+		String cardCompany = "국민카드";
+		
+		t_credit_number.setText(cardNumber);
+		t_credit_company.setText(cardCompany);
+	}
+	
+	
+	
 	public static void main(String[] args) {
-		new Payment();
+		Orders dto = new Orders();
+		new Payment(dto, 4900);
 
 	}
 

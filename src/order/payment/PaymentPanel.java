@@ -3,24 +3,35 @@ package order.payment;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import db.DBManager;
+import dto.Orders;
+import goods.GoodsMain;
+
 public class PaymentPanel extends JPanel implements ActionListener{
+	Payment payment;
 	JButton bt_back, bt_payment_complete;
-	JPanel p_menu, p_south, p_center;
+	JPanel p_south, p_center;
 	String orders_payment_type;
+	DBManager manager;
+	Connection con;
 	
-	public PaymentPanel(JPanel p_menu, String type) {
-		this.p_menu=p_menu;
+	
+	public PaymentPanel(Payment payment, String type) {
+		this.payment=payment;
 		this.orders_payment_type=type;
 		
 		setLayout(new BorderLayout());
 		
 		p_south=new JPanel();
 		p_center = new JPanel();
-		
 		bt_back = new JButton("뒤로");
 		bt_payment_complete = new JButton("결제완료");
 		
@@ -33,17 +44,77 @@ public class PaymentPanel extends JPanel implements ActionListener{
 		bt_back.addActionListener(this);
 		bt_payment_complete.addActionListener(this);
 		
+		//연결작업하자하자!
+		init();
+		
+	}
+	
+	public void init(){
+		//연결부터
+		manager = DBManager.getInstance();
+		con=manager.getConnection();
+		
+	}
+	
+	//dto를 주문 관리자에게 보내기
+	//con에 연결해서 주문테이블에 type을 채워서 보내야 한다.
+	public void send(){
+		StringBuffer sb = new StringBuffer();
+		sb.append("insert into orders (product_id, orders_date, orders_emp_id, orders_client_id, orders_status, orders_payment_type, orders_type)");
+		sb.append(" values(?,?,?,?,?,?,?)");
+		
+		PreparedStatement pstmt = null;
+		try {
+			pstmt=con.prepareStatement(sb.toString());
+			//pstmt.setInt(1, payment.dto.getOrders_id());
+			pstmt.setInt(1, payment.dto.getProduct_id());
+			pstmt.setTimestamp(2, payment.dto.getOrders_date());
+			pstmt.setInt(3, payment.dto.getOrders_emp_id());
+			pstmt.setInt(4, payment.dto.getOrders_client_id());
+			pstmt.setString(5, payment.dto.getOrders_status());
+			pstmt.setString(6, orders_payment_type);
+			pstmt.setString(7, "offline");
+			
+			int result = pstmt.executeUpdate();
+			
+			JOptionPane.showMessageDialog(this, result+"건 결제 완료");
+			
+			
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(this, "결제오류");
+		} finally {
+			if(pstmt!=null){
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			manager.disConnection(con);
+			
+			//이건 나중에 지워야 됨 일단 재고처리까지 되는걸로 처리해버림~~!
+			Orders dto = new Orders();
+			new GoodsMain(dto);
+			
+			//위에꺼지우면 여기서 다시 켜야됨~!
+			//System.exit(0);
+		}
+		
+		
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		Object obj=e.getSource();
 		 if(obj==bt_back){
 			 PaymentPanel.this.setVisible(false);
-			 p_menu.setVisible(true);
+			 payment.p_menu.setVisible(true);
 		}else if(obj==bt_payment_complete){
-			System.exit(0);
+			send();
 		}
-		
 	}
 
 }
