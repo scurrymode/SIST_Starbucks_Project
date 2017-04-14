@@ -94,7 +94,7 @@ public class PaymentPanel extends JPanel implements ActionListener{
 					e.printStackTrace();
 				}
 			}
-			manager.disConnection(con);
+			//manager.disConnection(con);
 			
 			//이건 나중에 지워야 됨 일단 재고처리까지 되는걸로 처리해버림~~!
 			Orders dto = new Orders();

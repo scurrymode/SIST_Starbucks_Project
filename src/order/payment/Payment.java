@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
 import java.util.Calendar;
 
 import javax.swing.JButton;
@@ -31,7 +32,7 @@ public class Payment extends JFrame implements ActionListener{
 	JTextField t_coupon_number;
 	Orders dto; //주문정보 dto
 	int price;//결제금액
-	JButton bt_card;//카드정보 읽어들이기
+	JButton bt_cardRead;//카드정보 읽어들이기
 	
 	public Payment(Orders dto, int price) {
 		this.dto=dto;
@@ -49,7 +50,7 @@ public class Payment extends JFrame implements ActionListener{
 		bt_credit = new JButton("카드");
 		bt_coupon = new JButton("쿠폰");
 		
-		bt_card = new JButton("카드긁기");
+		bt_cardRead = new JButton("카드긁기");
 		
 		//각 라벨들
 		la_cash_in = new JLabel("받은 돈");
@@ -105,7 +106,7 @@ public class Payment extends JFrame implements ActionListener{
 		p_credit.p_center.add(t_credit_number);
 		p_credit.p_center.add(la_credit_company);
 		p_credit.p_center.add(t_credit_company);
-		p_credit.p_center.add(bt_card);
+		p_credit.p_center.add(bt_cardRead);
 		
 		//쿠폰패널 설정
 		p_coupon.p_center.add(la_coupon_number);
@@ -133,7 +134,7 @@ public class Payment extends JFrame implements ActionListener{
 		bt_cash.addActionListener(this);
 		bt_credit.addActionListener(this);
 		bt_coupon.addActionListener(this);
-		bt_card.addActionListener(this);
+		bt_cardRead.addActionListener(this);
 		
 		//텍스트필드에 리스너 부착
 		t_cash_in.addKeyListener(new KeyAdapter() {
@@ -168,7 +169,8 @@ public class Payment extends JFrame implements ActionListener{
 		}else if(obj==bt_coupon){
 			p_menu.setVisible(false);
 			p_coupon.setVisible(true);
-		}else if(obj==bt_card){
+			couponReader();
+		}else if(obj==bt_cardRead){
 			cardReader();
 		}
 	}
@@ -179,6 +181,23 @@ public class Payment extends JFrame implements ActionListener{
 		
 		t_credit_number.setText(cardNumber);
 		t_credit_company.setText(cardCompany);
+	}
+	
+	public void couponReader(){
+		Thread thread = new Thread(){
+			public void run() {
+				try {
+					
+					long data = (long)System.in.read();
+					System.out.println(data);
+					t_coupon_number.setText(Long.toString(data));
+					
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		thread.start();
 	}
 	
 	

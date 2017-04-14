@@ -10,6 +10,7 @@ import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import db.DBManager;
 import dto.Goods;
@@ -21,7 +22,7 @@ public class GoodsMain extends JFrame implements ActionListener{
 	DBManager manager;
 	Connection con;
 	Orders dto;
-	Recipe recipe;
+	Recipe recipe;//해당 상품의 레시피 겟
 
 	//기존 재고량
 	int milk_ori;
@@ -42,13 +43,7 @@ public class GoodsMain extends JFrame implements ActionListener{
 	int orange_use;
 	
 	//업데이트할 재고량
-	int milk_result=milk_ori-milk_use;
-	int coffee_result=coffee_ori-coffee_use;
-	int honeybread_result=honeybread_ori-honeybread_use;
-	int muffin_result=muffin_ori-muffin_use;
-	int cake_result=cake_ori-cake_use;
-	int apple_result=apple_ori-apple_use;
-	int orange_result=orange_ori-orange_use;
+	
 
 	public GoodsMain(Orders dto) {
 		this.dto=dto;
@@ -61,7 +56,7 @@ public class GoodsMain extends JFrame implements ActionListener{
 		
 		
 		setLocationRelativeTo(null);
-		setSize(50,50);
+		setSize(100,100);
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		//접속
@@ -75,6 +70,7 @@ public class GoodsMain extends JFrame implements ActionListener{
 	
 	//제품명 알아내서 레시피 겟하기!
 	public void getRecipe(){
+			
 		PreparedStatement pstmt= null;
 		ResultSet rs = null;
 		int product_id=dto.getProduct_id();
@@ -85,17 +81,19 @@ public class GoodsMain extends JFrame implements ActionListener{
 			pstmt = con.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			
-			while(rs.next()){
-				recipe = new Recipe();
-				recipe.setProduct_id(rs.getInt("product_id"));
-				recipe.setMilk(rs.getInt("milk"));
-				recipe.setCoffee(rs.getInt("coffee"));
-				recipe.setHoneybread(rs.getInt("honeybread"));
-				recipe.setMuffin(rs.getInt("muffin"));
-				recipe.setCake(rs.getInt("cake"));
-				recipe.setApple(rs.getInt("apple"));
-				recipe.setOrange(rs.getInt("orange"));				
-			}
+			rs.next();
+			recipe = new Recipe();
+			recipe.setProduct_id(rs.getInt("product_id"));
+			recipe.setMilk(rs.getInt("milk"));
+			recipe.setCoffee(rs.getInt("coffee"));
+			recipe.setHoneybread(rs.getInt("honeybread"));
+			recipe.setMuffin(rs.getInt("muffin"));
+			recipe.setCake(rs.getInt("cake"));
+			recipe.setApple(rs.getInt("apple"));
+			recipe.setOrange(rs.getInt("orange"));
+			
+			//System.out.println(recipe.getOrange());
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -103,7 +101,6 @@ public class GoodsMain extends JFrame implements ActionListener{
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -111,7 +108,6 @@ public class GoodsMain extends JFrame implements ActionListener{
 				try {
 					pstmt.close();
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -125,7 +121,7 @@ public class GoodsMain extends JFrame implements ActionListener{
 		muffin_use = recipe.getMuffin();
 		cake_use = recipe.getCake();
 		apple_use = recipe.getApple();
-		orange_use = recipe.getOrange();			
+		orange_use = recipe.getOrange();
 		
 		PreparedStatement pstmt= null;
 		ResultSet rs = null;
@@ -142,20 +138,21 @@ public class GoodsMain extends JFrame implements ActionListener{
 				goods.setGoods_name(rs.getString("goods_name"));
 				goods.setGoods_quantity(rs.getInt("goods_quantity"));
 				goods.setGoods_company(rs.getString("goods_company"));
+//				System.out.println(goods.getGoods_name());
 				
-				if(goods.getGoods_name()=="milk"){
+				if(goods.getGoods_name().equals("milk")){
 					milk_ori=goods.getGoods_quantity();
-				}else if(goods.getGoods_name()=="coffee"){
+				}else if(goods.getGoods_name().equals("coffee")){
 					coffee_ori=goods.getGoods_quantity();
-				}else if(goods.getGoods_name()=="honeybread"){
+				}else if(goods.getGoods_name().equals("honeybread")){
 					honeybread_ori=goods.getGoods_quantity();
-				}else if(goods.getGoods_name()=="muffin"){
+				}else if(goods.getGoods_name().equals("muffin")){
 					muffin_ori=goods.getGoods_quantity();
-				}else if(goods.getGoods_name()=="cake"){
+				}else if(goods.getGoods_name().equals("cake")){
 					cake_ori=goods.getGoods_quantity();
-				}else if(goods.getGoods_name()=="apple"){
+				}else if(goods.getGoods_name().equals("apple")){
 					apple_ori=goods.getGoods_quantity();
-				}else if(goods.getGoods_name()=="orange"){
+				}else if(goods.getGoods_name().equals("orange")){
 					orange_ori=goods.getGoods_quantity();
 				}
 			}
@@ -183,17 +180,28 @@ public class GoodsMain extends JFrame implements ActionListener{
 	}
 	
 	public void updateGoods(){
+		//계산하기
+		int milk_result=milk_ori-milk_use;
+		int coffee_result=coffee_ori-coffee_use;
+		int honeybread_result=honeybread_ori-honeybread_use;
+		int muffin_result=muffin_ori-muffin_use;
+		int cake_result=cake_ori-cake_use;
+		int apple_result=apple_ori-apple_use;
+		int orange_result=orange_ori-orange_use;
+		
 		PreparedStatement pstmt= null;
-		ResultSet rs = null;		
+		ResultSet rs = null;	
+		
+		
 		StringBuffer sb = new StringBuffer();
-		sb.append("update goods set goods_quantity= case when goods_name=milk then"+milk_result);
-		sb.append(" when goods_name=coffee then"+coffee_result);
-		sb.append(" when goods_name=honeybread then"+honeybread_result);
-		sb.append(" when goods_name=muffin then"+muffin_result);
-		sb.append(" when goods_name=cake then"+cake_result);
-		sb.append(" when goods_name=apple then"+apple_result);
-		sb.append(" when goods_name=orange then"+orange_result);
-		sb.append(" end where goods_name in (milk,coffee,honeybread,muffin,cake,apple,orange)");
+		sb.append("update goods set goods_quantity= case when goods_name='milk' then "+milk_result);
+		sb.append(" when goods_name='coffee' then "+coffee_result);
+		sb.append(" when goods_name='honeybread' then "+honeybread_result);
+		sb.append(" when goods_name='muffin' then "+muffin_result);
+		sb.append(" when goods_name='cake' then "+cake_result);
+		sb.append(" when goods_name='apple' then "+apple_result);
+		sb.append(" when goods_name='orange' then "+orange_result);
+		sb.append(" end where goods_name in ('milk','coffee','honeybread','muffin','cake','apple','orange')");
 		
 		try {
 			pstmt=con.prepareStatement(sb.toString());
@@ -216,18 +224,19 @@ public class GoodsMain extends JFrame implements ActionListener{
 	
 	//레시피 읽어서 재고 털기
 	public void complete(){
+		//해당제품 레시피 알기
+		getRecipe();
 		
 		//재고량 확인
 		getGoods();
 		
-		//해당제품 레시피 알기
-		getRecipe();
 		
-		//재고 업데이트하기
-		updateGoods();
+		int result = JOptionPane.showConfirmDialog(this, "재고처리완료");
 		
-		
-		
+		if(result == JOptionPane.OK_OPTION){
+			updateGoods();
+			System.exit(0);
+		}
 		
 	}
 	//클릭시
