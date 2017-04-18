@@ -3,13 +3,6 @@ package client;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.Socket;
-import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import board.BoardMain;
 import db.DBManager;
 import dto.Member;
 import dto.Product;
@@ -51,7 +45,9 @@ public class ClientMain extends JFrame implements ActionListener{
 		p_center.add(bt_event);
 		p_center.add(bt_card);
 		
+		//리스너 연결
 		bt_orders.addActionListener(this);
+		bt_event.addActionListener(this);
 		
 		add(p_center);
 		
@@ -162,6 +158,8 @@ public class ClientMain extends JFrame implements ActionListener{
 		Object obj = e.getSource();
 		if(obj==bt_orders){
 			orders=new ClientOrders(this);
+		}else if(obj==bt_event){
+			BoardMain board=new BoardMain();
 		}
 	}
 
