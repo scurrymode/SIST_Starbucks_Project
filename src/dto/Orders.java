@@ -11,6 +11,7 @@ public class Orders {
 	private String orders_status="ready"; //0이 준비중
 	private String orders_payment_type;
 	private String orders_type="offline";
+	private String product_name;
 	
 	public int getOrders_id() {
 		return orders_id;
@@ -60,7 +61,12 @@ public class Orders {
 	public void setOrders_type(String orders_type) {
 		this.orders_type = orders_type;
 	}
-	
+	public String getProduct_name() {
+		return product_name;
+	}
+	public void setProduct_name(String product_name) {
+		this.product_name = product_name;
+	}
 	
 	
 	

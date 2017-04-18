@@ -2,6 +2,8 @@ package goods;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,7 +19,7 @@ import dto.Goods;
 import dto.Orders;
 import dto.Recipe;
 
-public class GoodsMain extends JFrame implements ActionListener{
+public class GoodsMain /*extends JFrame implements ActionListener*/{
 	JButton bt_complete;
 	DBManager manager;
 	Connection con;
@@ -47,20 +49,26 @@ public class GoodsMain extends JFrame implements ActionListener{
 
 	public GoodsMain(Orders dto) {
 		this.dto=dto;
-		bt_complete = new JButton("전달완료");
+		//bt_complete = new JButton("전달완료");
 		
 		//리스너 부착
-		bt_complete.addActionListener(this);
+		//bt_complete.addActionListener(this);
 		
-		add(bt_complete);
+		//add(bt_complete);
 		
 		
-		setLocationRelativeTo(null);
-		setSize(100,100);
-		setVisible(true);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		//setLocationRelativeTo(null);
+		//setSize(100,100);
+		//setVisible(true);
+		//setDefaultCloseOperation(EXIT_ON_CLOSE);
 		//접속
 		init();
+		
+		//해당제품 레시피 알기
+		getRecipe();
+				
+		//재고량 확인
+		getGoods();
 	
 	}
 	public void init(){
@@ -221,7 +229,7 @@ public class GoodsMain extends JFrame implements ActionListener{
 		}
 		
 	}
-	
+	/*
 	//레시피 읽어서 재고 털기
 	public void complete(){
 		//해당제품 레시피 알기
@@ -235,7 +243,7 @@ public class GoodsMain extends JFrame implements ActionListener{
 		
 		if(result == JOptionPane.OK_OPTION){
 			updateGoods();
-			System.exit(0);
+			//System.exit(0);
 		}
 		
 	}
@@ -243,7 +251,7 @@ public class GoodsMain extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		complete();
 		
-	}
+	}*/
 	
 
 }

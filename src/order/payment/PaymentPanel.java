@@ -75,10 +75,10 @@ public class PaymentPanel extends JPanel implements ActionListener{
 			
 			int result = pstmt.executeUpdate();
 			
-			JOptionPane.showMessageDialog(this, result+"건 결제 완료");
-			
-			
-			
+			if (result != 0) {
+				JOptionPane.showMessageDialog(this, result+"건 결제 완료");
+				
+			}
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -95,11 +95,11 @@ public class PaymentPanel extends JPanel implements ActionListener{
 			//manager.disConnection(con);
 			
 			//이건 나중에 지워야 됨 일단 재고처리까지 되는걸로 처리해버림~~!
-			Orders dto = new Orders();
-			new GoodsMain(dto);
+			//Orders dto = new Orders();
+			//new GoodsMain(dto);
 			
 			//위에꺼지우면 여기서 다시 켜야됨~!
-			//System.exit(0);
+			System.exit(0);
 		}
 		
 		
