@@ -23,7 +23,6 @@ public class PaymentPanel extends JPanel implements ActionListener{
 	DBManager manager;
 	Connection con;
 	
-	
 	public PaymentPanel(Payment payment, String type) {
 		this.payment=payment;
 		this.orders_payment_type=type;
@@ -61,19 +60,18 @@ public class PaymentPanel extends JPanel implements ActionListener{
 	public void send(){
 		StringBuffer sb = new StringBuffer();
 		sb.append("insert into orders (product_id, orders_date, orders_emp_id, orders_client_id, orders_status, orders_payment_type, orders_type)");
-		sb.append(" values(?,?,?,?,?,?,?)");
+		sb.append(" values(?,current_timestamp(),?,?,?,?,?)");
 		
 		PreparedStatement pstmt = null;
 		try {
 			pstmt=con.prepareStatement(sb.toString());
-			//pstmt.setInt(1, payment.dto.getOrders_id());
 			pstmt.setInt(1, payment.dto.getProduct_id());
-			pstmt.setTimestamp(2, payment.dto.getOrders_date());
-			pstmt.setInt(3, payment.dto.getOrders_emp_id());
-			pstmt.setInt(4, payment.dto.getOrders_client_id());
-			pstmt.setString(5, payment.dto.getOrders_status());
-			pstmt.setString(6, orders_payment_type);
-			pstmt.setString(7, "offline");
+			//pstmt.setTimestamp(2, "current_timestamp()");
+			pstmt.setInt(2, payment.dto.getOrders_emp_id());
+			pstmt.setInt(3, payment.dto.getOrders_client_id());
+			pstmt.setString(4, "ready");
+			pstmt.setString(5, orders_payment_type);
+			pstmt.setString(6, "offline");
 			
 			int result = pstmt.executeUpdate();
 			
