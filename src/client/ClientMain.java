@@ -27,17 +27,14 @@ import dto.Product;
 public class ClientMain extends JFrame implements ActionListener{
 	JPanel p_center;
 	JButton bt_orders, bt_myPage, bt_event, bt_card;
-	Socket socket;
-	int port = 7777;
-	String host = "211.238.142.118";
-	BufferedReader buffr;
-	BufferedWriter buffw;
+
 	//아예 처음 킬때 회원정보랑 싹 다 가져올거다!
 	DBManager manager = DBManager.getInstance();
 	Connection con;
 	String login_id;
 	Member member;
 	Vector<Product> product_list = new Vector<Product>();
+	ClientOrders orders; //주문창
 	
 	
 	public ClientMain(String login_id) {
@@ -58,35 +55,19 @@ public class ClientMain extends JFrame implements ActionListener{
 		
 		add(p_center);
 		
-		//소켓연결 및 스트림 꼽아주기!
-		init();
+//		//소켓연결 및 스트림 꼽아주기!
+//		init();
 		//각종 데이터 다 가져오기(상품, 회원)
 		getData();
 		
-		setSize(300, 400);
+		setSize(300*2, 400*2);
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
-		
-	}
-	
-	public void init(){
-		try {
-			socket = new Socket(host, port);
-			buffr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			buffw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-			
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 	
 		
 	public void getData(){
 		con = manager.getConnection();
-
 		getMember();
 		getProduct();
 	}
@@ -180,7 +161,7 @@ public class ClientMain extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		Object obj = e.getSource();
 		if(obj==bt_orders){
-			ClientOrders orders=new ClientOrders(this);
+			orders=new ClientOrders(this);
 		}
 	}
 
