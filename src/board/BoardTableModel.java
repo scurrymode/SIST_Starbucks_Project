@@ -76,8 +76,7 @@ public class BoardTableModel extends AbstractTableModel{
 	public String getColumnName(int col) {
 		return columnName[col];
 	}
-	
-	
+
 
 	public int getColumnCount() {
 		return columnName.length;

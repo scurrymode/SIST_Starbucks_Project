@@ -100,7 +100,6 @@ public class ClientMain extends JFrame implements ActionListener{
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -108,7 +107,6 @@ public class ClientMain extends JFrame implements ActionListener{
 				try {
 					pstmt.close();
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
