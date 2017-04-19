@@ -58,27 +58,27 @@ public class PaymentPanel extends JPanel implements ActionListener{
 	//dto를 주문 관리자에게 보내기
 	//con에 연결해서 주문테이블에 type을 채워서 보내야 한다.
 	public void send(){
-		StringBuffer sb = new StringBuffer();
-		sb.append("insert into orders (product_id, orders_date, orders_emp_id, orders_client_id, orders_status, orders_payment_type, orders_type)");
-		sb.append(" values(?,current_timestamp(),?,?,?,?,?)");
+		
 		
 		PreparedStatement pstmt = null;
 		try {
+			for(int i=0; i<payment.orders_list.size();i++){
+			StringBuffer sb = new StringBuffer();
+			sb.append("insert into orders (product_id, orders_date, orders_emp_id, orders_client_id, orders_status, orders_payment_type, orders_type)");
+			sb.append(" values(?,current_timestamp(),?,?,?,?,?)");
+			
 			pstmt=con.prepareStatement(sb.toString());
-			pstmt.setInt(1, payment.dto.getProduct_id());
+			pstmt.setInt(1, payment.orders_list.get(i).getProduct_id());
 			//pstmt.setTimestamp(2, "current_timestamp()");
-			pstmt.setInt(2, payment.dto.getOrders_emp_id());
-			pstmt.setInt(3, payment.dto.getOrders_client_id());
+			pstmt.setInt(2, payment.orders_list.get(i).getOrders_emp_id());
+			pstmt.setInt(3, payment.orders_list.get(i).getOrders_client_id());
 			pstmt.setString(4, "ready");
 			pstmt.setString(5, orders_payment_type);
 			pstmt.setString(6, "offline");
 			
 			int result = pstmt.executeUpdate();
-			
-			if (result != 0) {
-				JOptionPane.showMessageDialog(this, result+"건 결제 완료");
-				
 			}
+				JOptionPane.showMessageDialog(this, "1건 결제 완료");
 			
 		} catch (SQLException e) {
 			e.printStackTrace();

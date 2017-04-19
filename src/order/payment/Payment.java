@@ -8,9 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.IOException;
-import java.util.Calendar;
+import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -18,7 +17,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import dto.Orders;
+import order.main.Orders;
+
+
 
 public class Payment extends JFrame implements ActionListener{
 	JPanel p_menu;
@@ -30,12 +31,12 @@ public class Payment extends JFrame implements ActionListener{
 	JTextField t_cash_in, t_cash_cost, t_cash_out;
 	JTextField t_credit_cost, t_credit_number, t_credit_company;
 	JTextField t_coupon_number;
-	Orders dto; //주문정보 dto
+	Vector<Orders> orders_list; //주문정보 dto꾸러미
 	int price;//결제금액
 	JButton bt_cardRead;//카드정보 읽어들이기
 	
-	public Payment(Orders dto, int price) {
-		this.dto=dto;
+	public Payment(Vector<Orders> orders_list, int price) {
+		this.orders_list=orders_list;
 		this.price=price;
 		setLayout(new FlowLayout());
 		
@@ -153,7 +154,7 @@ public class Payment extends JFrame implements ActionListener{
 		setSize(300,400);
 		setVisible(true);
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
 	}
 	
@@ -202,10 +203,10 @@ public class Payment extends JFrame implements ActionListener{
 	
 	
 	
-	public static void main(String[] args) {
-		Orders dto = new Orders();
-		new Payment(dto, 4900);
-
-	}
+//	public static void main(String[] args) {
+//		Orders dto = new Orders();
+//		new Payment(dto, 4900);
+//
+//	}
 
 }
