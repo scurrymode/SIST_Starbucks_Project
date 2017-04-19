@@ -81,6 +81,20 @@ public class LoginForm extends JPanel implements ActionListener {
 	// 3.맞으면 넘기고 아니면 틀렸다고 오류메세지
 
 	public void loginCheck() {
+		if (t_id.getText().length() == 0) {
+			JOptionPane.showMessageDialog(this, "아이디를 입력해주세요");
+			t_id.requestFocus();
+			return;
+		}
+
+		char[] ch = t_pw.getPassword();
+		String pass = new String(ch);
+		if (pass.length() == 0) {
+			JOptionPane.showMessageDialog(this, "비밀번호를 정확히 입력해주세요");
+			t_pw.requestFocus();
+			return;
+		}
+
 		DBManager manager = DBManager.getInstance();
 		Connection con = manager.getConnection();
 		PreparedStatement pstmt;
@@ -94,19 +108,19 @@ public class LoginForm extends JPanel implements ActionListener {
 		try {
 			pstmt = con.prepareStatement(sql1);
 			rs = pstmt.executeQuery();
-			
+
 			while (rs.next()) {
 				list.add(rs.getString("member_login_id"));
 			}
-			
+
 			String id = t_id.getText();
 
-			for (int i=0; i <list.size(); i++) {
-				if (list.get(i).equalsIgnoreCase(id)){
-					flag_Login =true;
+			for (int i = 0; i < list.size(); i++) {
+				if (list.get(i).equalsIgnoreCase(id)) {
+					flag_Login = true;
 				}
 			}
-			if(flag_Login){
+			if (flag_Login) {
 				String sql2 = "select member_login_pw from member where member_login_id='" + id + "'";
 				try {
 					pstmt = con.prepareStatement(sql2);
@@ -117,24 +131,26 @@ public class LoginForm extends JPanel implements ActionListener {
 
 					rs.next();
 					String db_pw = rs.getString("member_login_pw");
-					
-					System.out.println("비번은 "+db_pw);
+
+					// System.out.println("비번은 " + db_pw);
 
 					if (db_pw.equals(pw)) {
-						JOptionPane.showMessageDialog(this, "로그인 완료! "+id+"님 환영합니다.");
-						memberWindow.id=id;
-						//클라이언트 메인 키기
-						memberWindow.page[2].add(new ClientMain(memberWindow));							
+						JOptionPane.showMessageDialog(this, "로그인 완료! " + id + "님 환영합니다.");
+						memberWindow.id = id;
+						// 클라이언트 메인 키기
+						memberWindow.page[2].add(new ClientMain(memberWindow));
 						memberWindow.setPage(2);
-					} 
+					} else {
+						JOptionPane.showMessageDialog(this, "로그인 정보가 올바르지 않습니다.");
+					}
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			
-			}else {
+
+			} else {
 				System.out.println("여기군 아이디없어서?");
-				JOptionPane.showMessageDialog(this, "로그인 실패");
+				JOptionPane.showMessageDialog(this, "로그인 정보가 올바르지 않습니다.");
 			}
 
 		} catch (SQLException e) {
