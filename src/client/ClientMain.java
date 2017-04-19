@@ -14,6 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import board.BoardMain;
+import card.CardListMain;
 import db.DBManager;
 import dto.Member;
 import dto.Product;
@@ -49,6 +50,7 @@ public class ClientMain extends JFrame implements ActionListener{
 		bt_orders.addActionListener(this);
 		bt_event.addActionListener(this);
 		bt_myPage.addActionListener(this);
+		bt_card.addActionListener(this);
 		
 		add(p_center);
 		
@@ -161,6 +163,8 @@ public class ClientMain extends JFrame implements ActionListener{
 			BoardMain board=new BoardMain();
 		}else if(obj==bt_myPage){
 			ClientEdit clientEdit =new ClientEdit("hi");
+		} else if(obj==bt_card) {
+			CardListMain card = new CardListMain(login_id);
 		}
 	}
 

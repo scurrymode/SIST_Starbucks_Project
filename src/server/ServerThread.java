@@ -28,6 +28,7 @@ public class ServerThread extends Thread {
 	DBManager manager = DBManager.getInstance();
 	Connection con;
 	JSONObject obj;
+	String type;
 
 	public ServerThread(Socket socket) {
 		this.socket = socket;
@@ -37,13 +38,11 @@ public class ServerThread extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
+		con = manager.getConnection();
 	}
 
 	// 주문 쿼리 날리기!
 	public void sendQuery() {
-		con = manager.getConnection();
-
 		StringBuffer sb = new StringBuffer();
 		sb.append(
 				"insert into orders (product_id, orders_date, orders_emp_id, orders_client_id, orders_status, orders_payment_type, orders_type)");
@@ -79,6 +78,31 @@ public class ServerThread extends Thread {
 
 		}
 	}
+	
+	public void insertCard() {
+		PreparedStatement pstmt = null;
+		String sql = "insert into card(member_id, card_number, card_username, card_valid, card_companyname) values(?, ?, ?, ?, ?)";
+		
+		try {
+			pstmt = con.prepareStatement(sql);
+			//System.out.println(obj.get("member_id") instanceof Long);
+			pstmt.setInt(1,  Long.valueOf((long)obj.get("member_id")).intValue());
+			pstmt.setString(2, (String)obj.get("card_number"));
+			pstmt.setString(3, (String)obj.get("card_username"));
+			pstmt.setString(4, (String)obj.get("card_valid"));
+			pstmt.setString(5, (String)obj.get("card_companyname"));
+			
+			int result = pstmt.executeUpdate();
+			
+			if(result != 0) {
+				System.out.println("성공");
+				send();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
 
 	public void listen() {
 		try {
@@ -89,7 +113,11 @@ public class ServerThread extends Thread {
 			String requestType = (String) obj.get("requestType");
 			// 타입이 오더라면, 주문 쿼리 넣어줘야 한다.
 			if (requestType.equals("order")) {
+				type = "order";
 				sendQuery();
+			} else if(requestType.equals("card")) {
+				type = "card";
+				insertCard();
 			}
 			// 쿼리문 한번 날리고 한번 쉬자!
 			Thread.sleep(100);
@@ -103,7 +131,14 @@ public class ServerThread extends Thread {
 	}
 
 	public void send() {
-		String str = "주문완료";
+		String str = null;
+		
+		if(type.equals("order")) {
+			str = "주문완료";
+		} else if(type.equals("card")) {
+			str = "카드등록완료";
+		}
+		
 		try {
 			buffw.write(str + "\n");
 			buffw.flush();
