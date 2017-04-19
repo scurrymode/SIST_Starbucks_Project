@@ -53,8 +53,4 @@ public class Board {
 	public void setBoard_emp_name(String board_emp_name) {
 		this.board_emp_name = board_emp_name;
 	}
-	
-	
-	
-
 }

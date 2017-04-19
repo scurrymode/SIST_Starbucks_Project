@@ -7,6 +7,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Vector;
 
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.AbstractTableModel;
 
 import db.DBManager;
@@ -19,6 +20,7 @@ public class DataController{
 	Vector<String> columnName = new Vector<String>();
 	InsertFrame insertFrame;
 	MyPanel myPanel;
+	
 	public DataController(MyPanel mypanel) {
 		manager = DBManager.getInstance();
 		this.con =manager.getConnection();
@@ -120,6 +122,7 @@ public class DataController{
 		}else{
 			str = "emp_login_id";
 		}
+		
 		String sql="select * from emp where "+str+" = ?";
 		PreparedStatement pstmt =null;
 		ResultSet rs =null;
@@ -139,7 +142,6 @@ public class DataController{
 				vec.add(rs.getString(5));
 				vec.add(rs.getString(6));
 				vec.add(rs.getString(7));
-				
 				data.add(vec);
 			}
 			myPanel.table.setModel(getDataModel());
@@ -147,6 +149,7 @@ public class DataController{
 			e.printStackTrace();
 		}
 	}
+	/*
 	public void SearchMember(){
 		String str ="";
 		System.out.println(myPanel.choice.getSelectedItem());
@@ -183,8 +186,36 @@ public class DataController{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-	}
-	public void editTable(DataModel myModel){
+	}*/
+	
+	public void editTable(DataModel model,TableModelEvent e,String type){
 		
+		System.out.println("¹Ù²ñ");
+		PreparedStatement pstmt =null;
+		int row = e.getFirstRow();
+		int col = e.getColumn();
+		String data =(String) model.getValueAt(row, col);
+		String pk = (String) model.getValueAt(row, 0);
+		String column=(String) model.getColumnName(col);
+		if(type.equals("product")){
+			String sql ="update " +type+" set "+column+" ='"+data+"' where product_id ="+pk;
+		}
+		String sql ="update " +type+" set "+column+" ='"+data+"' where "+type+"_id ="+pk;
+		System.out.println(sql);
+		try {
+			pstmt = con.prepareStatement(sql);
+			int result = pstmt.executeUpdate();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}finally{
+			if(pstmt!=null){
+				try {
+					pstmt.close();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		}	
 	}
 }

@@ -19,19 +19,20 @@ import javax.swing.JTabbedPane;
 public class AdminPage extends JFrame{
 	
 	JPanel p_home;
-	JScrollPane scroll_home,scroll_emp,scroll_member,scroll_sales,scroll_goods;
 	JTabbedPane tabbedPane;
+	
 	public AdminPage() {
 		tabbedPane = new JTabbedPane();
 		p_home = new JPanel();
-		
 		tabbedPane.addTab("权",p_home);
 		tabbedPane.addTab("流盔包府",new EmpPanel() );
 		tabbedPane.addTab("雀盔包府",new MemberPanel());
 		tabbedPane.addTab("概免包府",new SalesPanel());
 		tabbedPane.addTab("犁绊包府",new GoodsPanel());
 		tabbedPane.addTab("饭矫乔包府",new RecipePanel());
+		tabbedPane.addTab("饭矫乔包府",new BoardPanel());
 		add(tabbedPane);
+		
 		setVisible(true);
 		setSize(800,800);
 		setLocationRelativeTo(null);

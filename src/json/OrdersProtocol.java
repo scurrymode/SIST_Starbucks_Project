@@ -18,11 +18,7 @@ public class OrdersProtocol {
 		sb.append("\"orders_type\":\"online\"");
 		sb.append("}");
 	}
-	
 	public StringBuffer getProtocol(){
 		return sb;
 	}
-	
-	
-
 }

@@ -14,23 +14,17 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 
-public class SalesPanel extends MyPanel implements ActionListener{
-	JPanel p_south,p_north;
-	JScrollPane scroll;
+public class SalesPanel extends MyPanel implements ActionListener,TableModelListener{
+	
 	JLabel la_name;
 	JButton bt_chart;
-	DataController dataController;
-	
+
 	public SalesPanel() {
-		p_south = new JPanel();
-		p_north = new JPanel();
-		table = new JTable(3,4);
-		scroll =new JScrollPane(table);
 		la_name =new JLabel("이름");
-
 		bt_chart = new JButton("차트");
-
 		dataController = new DataController(this);
 		dataController.getList("sales");
 
@@ -41,7 +35,10 @@ public class SalesPanel extends MyPanel implements ActionListener{
 		bt_chart.addActionListener(this);
 	
 		//테이블 초기 설정
-		table.setModel(dataController.getDataModel());
+		model =(DataModel) dataController.getDataModel();
+		model.addTableModelListener(this);
+		
+		table.setModel(model);
 		
 		add(p_north,BorderLayout.NORTH);
 		add(scroll);
@@ -56,4 +53,11 @@ public class SalesPanel extends MyPanel implements ActionListener{
 	public void showChart(){
 		JOptionPane.showMessageDialog(this, "회원 계정 등록");
 	}
+
+	public void tableChanged(TableModelEvent e) {
+		int row = e.getFirstRow();
+		int col = e.getColumn();
+		dataController.editTable(model,e,"sales");
+	}
+	
 }

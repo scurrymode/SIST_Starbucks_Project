@@ -18,18 +18,9 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
 public class EmpPanel extends MyPanel implements ActionListener, TableModelListener{
-	JPanel p_south,p_north;
-	//JTable table;
-
-	JScrollPane scroll;
 	JLabel la_name;
 	JButton bt_search,bt_reg,bt_edit;
-	DataController dataController;
-	
 	public EmpPanel() {
-		p_south = new JPanel();
-		p_north = new JPanel();
-		scroll =new JScrollPane(table);
 		la_name =new JLabel("이름");
 		bt_search = new JButton("검색");
 		bt_reg = new JButton("직원 계정 추가");
@@ -50,9 +41,11 @@ public class EmpPanel extends MyPanel implements ActionListener, TableModelListe
 		//bt_edit.addActionListener(this);
 		bt_reg.addActionListener(this);
 		bt_search.addActionListener(this);
-		
+		//table.getModel().addTableModelListener(this);
+		model =(DataModel) dataController.getDataModel();
+		model.addTableModelListener(this);
 		//테이블 초기 설정
-		table.setModel(dataController.getDataModel());
+		table.setModel(model);
 		
 		add(p_north,BorderLayout.NORTH);
 		add(scroll);
@@ -78,7 +71,6 @@ public class EmpPanel extends MyPanel implements ActionListener, TableModelListe
 	public void tableChanged(TableModelEvent e) {
 		int row = e.getFirstRow();
 		int col = e.getColumn();
-		
-		
+		dataController.editTable(model,e,"emp");
 	}
 }

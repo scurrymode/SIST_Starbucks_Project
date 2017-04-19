@@ -48,6 +48,7 @@ public class ClientMain extends JFrame implements ActionListener{
 		//리스너 연결
 		bt_orders.addActionListener(this);
 		bt_event.addActionListener(this);
+		bt_myPage.addActionListener(this);
 		
 		add(p_center);
 		
@@ -160,6 +161,8 @@ public class ClientMain extends JFrame implements ActionListener{
 			orders=new ClientOrders(this);
 		}else if(obj==bt_event){
 			BoardMain board=new BoardMain();
+		}else if(obj==bt_myPage){
+			ClientEdit clientEdit =new ClientEdit("hi");
 		}
 	}
 

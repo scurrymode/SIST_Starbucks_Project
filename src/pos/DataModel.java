@@ -28,5 +28,18 @@ public class DataModel extends AbstractTableModel{
 	public Object getValueAt(int row, int col) {
 		return data.get(row).get(col);
 	}
-
+	//각셀의 값을 반영하는 메서드
+	public void setValueAt(Object Value, int row, int col) {
+		Vector vec =data.get(row);
+		vec.set(col, Value);
+		this.fireTableCellUpdated(row, col);
+	}
+	public boolean isCellEditable(int row, int col) {
+		if(col!=0){
+			return true;
+		}
+		return false;
+	}
+		
+		
 }

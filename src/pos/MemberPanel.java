@@ -14,20 +14,15 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 
-public class MemberPanel extends MyPanel implements ActionListener{
-	JPanel p_south,p_north;
-	JScrollPane scroll;
+public class MemberPanel extends MyPanel implements ActionListener,TableModelListener{
 	JLabel la_name;
 	Choice choice;
 	JButton bt_search,bt_reg,bt_edit,bt_coupon;
-	DataController dataController;
-	
+
 	public MemberPanel() {
-		p_south = new JPanel();
-		p_north = new JPanel();
-		table = new JTable(3,4);
-		scroll =new JScrollPane(table);
 		la_name =new JLabel("이름");
 		choice = new Choice();
 		bt_search = new JButton("검색");
@@ -52,8 +47,11 @@ public class MemberPanel extends MyPanel implements ActionListener{
 		//bt_edit.addActionListener(this);
 		bt_reg.addActionListener(this);
 		bt_search.addActionListener(this);
+		model =(DataModel) dataController.getDataModel();
+		model.addTableModelListener(this);
 		
-		table.setModel(dataController.getDataModel());
+		
+		table.setModel(model);
 		add(p_north,BorderLayout.NORTH);
 		add(scroll);
 		add(p_south,BorderLayout.SOUTH);
@@ -73,9 +71,17 @@ public class MemberPanel extends MyPanel implements ActionListener{
 	}
 	public void search(){
 		JOptionPane.showMessageDialog(this, "검색할게요");
-		dataController.SearchMember();
+		//dataController.SearchMember();
 	}
 	public void sendCoupon(){
 		JOptionPane.showMessageDialog(this, "쿠폰을 보내겠습니다");
 	}
+	
+	public void tableChanged(TableModelEvent e) {
+		int row = e.getFirstRow();
+		int col = e.getColumn();
+		dataController.editTable(model,e,"member");
+	}
+	
+	
 }
