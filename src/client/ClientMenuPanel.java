@@ -54,10 +54,7 @@ public class ClientMenuPanel extends JPanel implements ActionListener{
 		
 		la_name = new JLabel(product.getProduct_name());
 		la_price = new JLabel(Integer.toString(product.getProduct_price()));
-		bt = new JButton("추가하기");
-		
-		
-		
+		bt = new JButton("추가하기");		
 		bt.addActionListener(this);
 		
 		add(can);

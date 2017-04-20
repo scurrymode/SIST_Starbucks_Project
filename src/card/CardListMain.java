@@ -24,7 +24,7 @@ import javax.swing.JPanel;
 import db.DBManager;
 import dto.Card;
 
-public class CardListMain extends JFrame implements ActionListener{
+public class CardListMain extends JPanel implements ActionListener{
 	DBManager manager = DBManager.getInstance();
 	Connection con;
 	Vector<Card> card_list = new Vector<Card>();
@@ -55,9 +55,8 @@ public class CardListMain extends JFrame implements ActionListener{
 		
 		bt.addActionListener(this);
 		
-		setSize(500, 700);
+		setPreferredSize(new Dimension(500, 700));
 		setVisible(true);
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
 		/*
 		 * 패널안에 카드 회사, 유저네임 출력 

@@ -22,6 +22,12 @@ import dto.Product;
 import member.MemberWindow;
 
 public class ClientMain extends JPanel implements ActionListener{
+	//메인 화면~!
+	JPanel p_main = new JPanel();
+	JButton bt_home= new JButton("홈으로");
+	
+	
+	//클라이언트 화면
 	JPanel p_center;
 	JButton bt_orders, bt_myPage, bt_event, bt_card;
 
@@ -56,10 +62,10 @@ public class ClientMain extends JPanel implements ActionListener{
 		bt_myPage.addActionListener(this);
 		bt_card.addActionListener(this);
 		
-		add(p_center);
+		p_main.add(p_center);
+		add(bt_home, BorderLayout.NORTH);
+		add(p_main);
 		
-//		//소켓연결 및 스트림 꼽아주기!
-//		init();
 		//각종 데이터 다 가져오기(상품, 회원)
 		getData();
 		
@@ -166,6 +172,7 @@ public class ClientMain extends JPanel implements ActionListener{
 			orders=new ClientOrders(this);
 		}else if(obj==bt_event){
 			BoardMain board=new BoardMain();
+			
 		}else if(obj==bt_myPage){
 			ClientEdit clientEdit =new ClientEdit(member);
 		} else if(obj==bt_card) {
@@ -173,9 +180,8 @@ public class ClientMain extends JPanel implements ActionListener{
 		}
 	}
 
-//	public static void main(String[] args) {
-//		new ClientMain("hi");
-//
-//	}
+	public void setPage(){
+		
+	}
 
 }
