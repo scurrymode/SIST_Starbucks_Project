@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
@@ -26,7 +27,8 @@ public class JoinForm extends JPanel implements ActionListener {
 	JLabel label[] = new JLabel[11]; // Label 배열로 선언
 	JPanel p1, p2, p3, p4, p5, p6, p7, p8, p9, p10;
 	JLabel log, id_la, pw_la, nickname_la, name_la, gender_la, phone_la, phone_la1, phone_la2, birth_la, birth_la1;
-	JTextField id_t, pw_t, nickname_t, name_t, phone_t2, phone_t3, birth_t;
+	JTextField id_t, nickname_t, name_t, phone_t2, phone_t3, birth_t;
+	JPasswordField pw_t;
 	JButton id_bt, bt_trans, bt_cancel;
 	ButtonGroup gender;
 	JRadioButton female, male;
@@ -69,7 +71,7 @@ public class JoinForm extends JPanel implements ActionListener {
 		// Password
 		pw_la = new JLabel("Password : ");
 		p3.add(pw_la);
-		pw_t = new JTextField("", 15);
+		pw_t = new JPasswordField("", 15);
 		p3.add(pw_t);
 		add(p3);
 
@@ -203,28 +205,38 @@ public class JoinForm extends JPanel implements ActionListener {
 	}
 
 	public void id_over_ck() {
-
+		boolean flag = true;
+		boolean flag2 = true;
 		ArrayList<String> list = new ArrayList<String>();
 		String sql = "select member_login_id from member";
 
 		try {
 			pstmt = con.prepareStatement(sql);
 			rs = pstmt.executeQuery(sql);
-
+			int cnt = 0;
 			while (rs.next()) {
-				list.add(rs.getString("member_login_id"));
+				list.add(rs.getString(1));
+				cnt++;
+				System.out.println(cnt);
+				System.out.println(list.get(cnt - 1));
 			}
 
 			String id = id_t.getText();
 			for (int i = 0; i < list.size(); i++) {
+				System.out.println(list.get(i));
 				if (list.get(i).equals(id)) {
-					JOptionPane.showMessageDialog(this, "중복된 아이디가 존재 합니다.");
-					break;
-				} else {
-					JOptionPane.showMessageDialog(this, "사용 가능한 아이디입니다.");
-					break;
-				}
+					flag = false;
 
+				} else if (id.equals("")) {
+					flag2 = false;
+				}
+			}
+			if (flag == false && flag2 == true) {
+				JOptionPane.showMessageDialog(this, "중복된 아이디가 존재 합니다.");
+			} else if (flag == true && flag2 == true) {
+				JOptionPane.showMessageDialog(this, "사용 가능한 아이디입니다.");
+			} else if (flag2 == false) {
+				JOptionPane.showMessageDialog(this, "아이디를 입력해주세요.");
 			}
 
 		} catch (
@@ -233,6 +245,34 @@ public class JoinForm extends JPanel implements ActionListener {
 			e.printStackTrace();
 		}
 
+	}
+
+	public boolean join_valCheck() {
+		boolean re = true;
+		if (id_t.getText().equals("")) {
+			JOptionPane.showMessageDialog(this, "☆필수☆ 아이디를 입력해주세요.");
+			re = false;
+		} else if (pw_t.getText().equals("")) {
+			JOptionPane.showMessageDialog(this, "☆필수☆ 비밀번호를 입력해주세요.");
+			re = false;
+		} else if (name_t.getText().equals("")) {
+			JOptionPane.showMessageDialog(this, "☆필수☆ 이름을 입력해주세요.");
+			re = false;
+		} else if (nickname_t.getText().equals("")) {
+			JOptionPane.showMessageDialog(this, "☆필수☆ 닉네임을 입력해주세요.");
+			re = false;
+		} else if (phone_t2.getText().equals("")) {
+			JOptionPane.showMessageDialog(this, "☆필수☆ 연락처를 입력해주세요.");
+			re = false;
+		} else if (phone_t3.getText().equals("")) {
+			JOptionPane.showMessageDialog(this, "☆필수☆ 연락처를 입력해주세요.");
+			re = false;
+		} else if (birth_t.getText().equals("")) {
+			JOptionPane.showMessageDialog(this, "☆필수☆ 생년월일을 입력해주세요.");
+			re = false;
+		}
+
+		return re;
 	}
 
 	// DB연동 Connection 얻어다 놓기
@@ -245,7 +285,8 @@ public class JoinForm extends JPanel implements ActionListener {
 
 		Object obj = e.getSource();
 		if (obj == bt_trans) {
-			trans();
+			if (join_valCheck())
+				trans();
 		} else if (obj == bt_cancel) {
 			cancel();
 		} else if (obj == id_bt) {

@@ -12,12 +12,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class CardCompanyMain extends JFrame implements ActionListener{
+	CardListMain main;
 	JPanel p_north, p_center;
 	JLabel la;
 	JButton bt_cancel;
 	JButton[] bt_card = new JButton[10];
 	
-	public CardCompanyMain() {
+	public CardCompanyMain(CardListMain main) {
+		this.main = main;
 		p_north = new JPanel();
 		p_center = new JPanel();
 		la = new JLabel("카드 선택");

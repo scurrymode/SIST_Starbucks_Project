@@ -38,7 +38,7 @@ public class ClientMain extends JPanel implements ActionListener{
 	DBManager manager = DBManager.getInstance();
 	Connection con;
 	public String login_id;
-	Member member;
+	public Member member;
 	Vector<Product> product_list = new Vector<Product>();
 	ClientOrders orders; //¡÷πÆ√¢
 	
