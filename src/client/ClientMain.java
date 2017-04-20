@@ -1,5 +1,7 @@
 package client;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,7 +12,6 @@ import java.sql.SQLException;
 import java.util.Vector;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import board.BoardMain;
@@ -18,8 +19,9 @@ import card.CardListMain;
 import db.DBManager;
 import dto.Member;
 import dto.Product;
+import member.MemberWindow;
 
-public class ClientMain extends JFrame implements ActionListener{
+public class ClientMain extends JPanel implements ActionListener{
 	JPanel p_center;
 	JButton bt_orders, bt_myPage, bt_event, bt_card;
 
@@ -32,8 +34,10 @@ public class ClientMain extends JFrame implements ActionListener{
 	ClientOrders orders; //주문창
 	
 	
-	public ClientMain(String login_id) {
-		this.login_id=login_id;
+	public ClientMain(MemberWindow memberWindow) {
+		this.login_id=memberWindow.id;
+		this.setLayout(new BorderLayout());
+		
 		p_center = new  JPanel();
 		bt_orders = new JButton("주문");
 		bt_myPage = new JButton("마이페이지");
@@ -59,9 +63,7 @@ public class ClientMain extends JFrame implements ActionListener{
 		//각종 데이터 다 가져오기(상품, 회원)
 		getData();
 		
-		setSize(300*2, 400*2);
-		setVisible(true);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setPreferredSize(new Dimension(300*2, 400*2));
 	}
 	
 		
@@ -74,6 +76,7 @@ public class ClientMain extends JFrame implements ActionListener{
 	public void getMember(){
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
+		
 		String sql ="select * from member where member_login_id='"+login_id+"'";
 		
 		System.out.println(sql);
@@ -94,6 +97,8 @@ public class ClientMain extends JFrame implements ActionListener{
 			member.setMember_phone(rs.getString(7));
 			member.setMember_birth(rs.getString(8));
 			member.setMember_coupon(rs.getString(9));
+			
+			System.out.println(member.getMember_nickname());
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -162,15 +167,15 @@ public class ClientMain extends JFrame implements ActionListener{
 		}else if(obj==bt_event){
 			BoardMain board=new BoardMain();
 		}else if(obj==bt_myPage){
-			ClientEdit clientEdit =new ClientEdit("hi");
+			ClientEdit clientEdit =new ClientEdit(member);
 		} else if(obj==bt_card) {
 			CardListMain card = new CardListMain(login_id);
 		}
 	}
 
-	public static void main(String[] args) {
-		new ClientMain("hi");
-
-	}
+//	public static void main(String[] args) {
+//		new ClientMain("hi");
+//
+//	}
 
 }

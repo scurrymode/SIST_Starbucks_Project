@@ -47,8 +47,8 @@ public class ClientEdit extends JFrame implements FocusListener,ActionListener{
 	Member member;
 	JButton bt_reg,bt_exit;
 	
-	public ClientEdit(String id) {
-		this.id= id;
+	public ClientEdit(Member member) {
+		this.member=member;
 		controller = new EditController(id);
 		p_content = new JPanel();
 		p_img =new JPanel();
@@ -84,7 +84,6 @@ public class ClientEdit extends JFrame implements FocusListener,ActionListener{
 		};
 	
 		controller.getMember();
-		member =controller.getMemberInstance();
 		t_id.setText(member.getMember_login_id());
 		t_pw.setText(member.getMember_login_pw());
 		t_name.setText(member.getMember_name());

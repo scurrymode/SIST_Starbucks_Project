@@ -5,6 +5,8 @@ import java.awt.FlowLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import client.ClientMain;
+
 //이 윈도우는 크기가 결정되어있지 않아야 한다.
 //(로그인 폼을 지나고 지나면 그대로커지는 형태) 
 //왜? 윈도우 안에 들어오게 될 패널이 그 크기를 결정하게되므로 
@@ -14,6 +16,7 @@ public class MemberWindow extends JFrame {
 	LoginForm loginForm;
 	JoinForm joinForm;
 	MemberPanel memberPanel;
+	public String id;
 	
 	JPanel[] page = new JPanel[3];
 
@@ -22,7 +25,7 @@ public class MemberWindow extends JFrame {
 
 		page[0] = new LoginForm(this);
 		page[1] = new JoinForm(this);
-		page[2] = new MemberPanel(this);
+		page[2] = new JPanel();
 		
 
 		add(page[0]);
@@ -42,7 +45,6 @@ public class MemberWindow extends JFrame {
 		for (int i = 0; i < page.length; i++) {
 			if (i == index) {
 				page[i].setVisible(true);
-
 			} else {
 				page[i].setVisible(false);
 			}
