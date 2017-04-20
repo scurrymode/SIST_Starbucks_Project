@@ -54,13 +54,10 @@ public class OrderMain extends JPanel implements ActionListener,Runnable{
 	int total;
 	int order_number=1;
 	
-<<<<<<< HEAD
-	public OrderMain() {
-=======
 	public OrderMain(PosWindow posWindow) {
 		this.posWindow =posWindow;
 		p_date=new JPanel();
->>>>>>> 93786b6967b6967e4d18183bffb638c11af28061
+
 		p_east=new JPanel();
 		p_west=new JPanel();
 		p_pos=new JPanel();
