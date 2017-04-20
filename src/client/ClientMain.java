@@ -23,8 +23,11 @@ import member.MemberWindow;
 
 public class ClientMain extends JPanel implements ActionListener{
 	//메인 화면~!
-	JPanel p_main = new JPanel();
+	JPanel p_page = new JPanel(); //페이지들 담아둔거
+	JPanel p_main = new JPanel(); //홈버튼 들어있는 거
 	JButton bt_home= new JButton("홈으로");
+	
+	JPanel[] pageList = new JPanel[5];
 	
 	
 	//클라이언트 화면
@@ -34,21 +37,28 @@ public class ClientMain extends JPanel implements ActionListener{
 	//아예 처음 킬때 회원정보랑 싹 다 가져올거다!
 	DBManager manager = DBManager.getInstance();
 	Connection con;
-	String login_id;
+	public String login_id;
 	Member member;
 	Vector<Product> product_list = new Vector<Product>();
 	ClientOrders orders; //주문창
 	
 	
 	public ClientMain(MemberWindow memberWindow) {
+
 		this.login_id=memberWindow.id;
 		this.setLayout(new BorderLayout());
 		
-		p_center = new  JPanel();
+		p_center = new JPanel();
 		bt_orders = new JButton("주문");
 		bt_myPage = new JButton("마이페이지");
 		bt_event = new JButton("이벤트");
 		bt_card = new JButton("결제수단");
+		
+		//버튼 크기 키우기
+		bt_orders.setPreferredSize(new Dimension(280, 350));
+		bt_myPage.setPreferredSize(new Dimension(280, 350));
+		bt_event.setPreferredSize(new Dimension(280, 350));
+		bt_card.setPreferredSize(new Dimension(280, 350));
 		
 		p_center.setLayout(new GridLayout(2, 2));	
 		p_center.add(bt_orders);
@@ -61,15 +71,24 @@ public class ClientMain extends JPanel implements ActionListener{
 		bt_event.addActionListener(this);
 		bt_myPage.addActionListener(this);
 		bt_card.addActionListener(this);
+		bt_home.addActionListener(this);
 		
-		p_main.add(p_center);
+		
+		p_main.setLayout(new BorderLayout());
+		p_page.add(p_center);
+		p_main.add(p_page);
 		add(bt_home, BorderLayout.NORTH);
+		
 		add(p_main);
 		
 		//각종 데이터 다 가져오기(상품, 회원)
 		getData();
 		
+		
 		setPreferredSize(new Dimension(300*2, 400*2));
+		
+		//모든 페이지 일단 다 만들기~!
+		init();
 	}
 	
 		
@@ -169,18 +188,42 @@ public class ClientMain extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		Object obj = e.getSource();
 		if(obj==bt_orders){
-			orders=new ClientOrders(this);
+			setPage(1);
 		}else if(obj==bt_event){
-			BoardMain board=new BoardMain();
-			
+			setPage(2);
 		}else if(obj==bt_myPage){
-			ClientEdit clientEdit =new ClientEdit(member);
+			setPage(3);
 		} else if(obj==bt_card) {
-			CardListMain card = new CardListMain(login_id);
+			setPage(4);
+		} else if(obj==bt_home) {
+			setPage(0);
 		}
 	}
-
-	public void setPage(){
+	
+	public void init(){
+		orders=new ClientOrders(this);
+		BoardMain board=new BoardMain();	
+		ClientEdit clientEdit =new ClientEdit(this);
+		CardListMain card = new CardListMain(this);
+		
+		pageList[0]=p_center;
+		pageList[1]=orders;
+		pageList[2]=board;
+		pageList[3]=clientEdit;
+		pageList[4]=card;
+		
+		for(int i=1;i<5;i++){
+			//넣기
+			p_page.add(pageList[i]);
+			pageList[i].setVisible(false);
+		}
+		
+	}
+	public void setPage(int num){
+		for(int i=0;i<pageList.length;i++){
+			pageList[i].setVisible(false);
+		}
+		pageList[num].setVisible(true);
 		
 	}
 

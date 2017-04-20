@@ -14,7 +14,7 @@ import javax.swing.JScrollPane;
 
 import dto.Product;
 
-public class ClientOrders extends JFrame implements ActionListener{
+public class ClientOrders extends JPanel implements ActionListener{
 	ClientMain main;
 	JPanel p_north, p_center, p_south;
 	JButton bt_orders_delete, bt_orders_send;
@@ -56,9 +56,8 @@ public class ClientOrders extends JFrame implements ActionListener{
 		bt_orders_delete.addActionListener(this);
 		bt_orders_send.addActionListener(this);
 		
-		setSize(300*2,400*2);
+		setPreferredSize(new Dimension(300*2,400*2));
 		setVisible(true);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 	
 	//접속과 동시에 가져온 제품 정보를 페널로 다 띄우기

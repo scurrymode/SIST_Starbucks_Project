@@ -3,12 +3,9 @@ package client;
 
 import java.awt.BorderLayout;
 import java.awt.Canvas;
-import java.awt.Choice;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -22,7 +19,6 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
@@ -47,8 +43,9 @@ public class ClientEdit extends JPanel implements FocusListener,ActionListener{
 	Member member;
 	JButton bt_reg;
 	
-	public ClientEdit(Member member) {
-		this.member=member;
+	public ClientEdit(	ClientMain clientMain) {
+		setLayout(new BorderLayout());
+		this.member=clientMain.member;
 		controller = new EditController(id);
 		p_content = new JPanel();
 		p_img =new JPanel();

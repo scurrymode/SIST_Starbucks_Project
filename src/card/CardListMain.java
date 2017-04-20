@@ -17,10 +17,10 @@ import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import client.ClientMain;
 import db.DBManager;
 import dto.Card;
 
@@ -34,9 +34,11 @@ public class CardListMain extends JPanel implements ActionListener{
 	JLabel la_member;
 	String login_id;
 
-	public CardListMain(String login_id) {
+	public CardListMain(ClientMain clientMain) {
+		setLayout(new BorderLayout());
+		this.login_id = clientMain.login_id;
 		con = manager.getConnection();
-		this.login_id = login_id;
+		
 		
 		p_north = new JPanel();
 		p_center = new JPanel();
