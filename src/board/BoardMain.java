@@ -19,7 +19,7 @@ import javax.swing.JTextArea;
 
 import dto.Board;
 
-public class BoardMain extends JFrame{
+public class BoardMain extends JPanel{
 	JPanel p_main;
 	JTable table;
 	JScrollPane scroll;
@@ -35,10 +35,9 @@ public class BoardMain extends JFrame{
 		p_main.add(scroll);
 		add(p_main);		
 		
-		setSize(300*2, 400*2);
+		setPreferredSize(new Dimension(300*2, 400*2));
 		setVisible(true);
 		setBackground(Color.WHITE);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 	
 	public void setTable(){

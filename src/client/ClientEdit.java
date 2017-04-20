@@ -3,12 +3,9 @@ package client;
 
 import java.awt.BorderLayout;
 import java.awt.Canvas;
-import java.awt.Choice;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -22,7 +19,6 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
@@ -31,7 +27,7 @@ import javax.swing.border.Border;
 
 import dto.Member;
 
-public class ClientEdit extends JFrame implements FocusListener,ActionListener{
+public class ClientEdit extends JPanel implements FocusListener,ActionListener{
 	JTextArea t_coupon;
 	JTextField t_id,t_name,t_nick,t_phone1,t_phone2;
 	//Choice ch_phone,ch_year,ch_mon,ch_day; 
@@ -45,10 +41,11 @@ public class ClientEdit extends JFrame implements FocusListener,ActionListener{
 	String id;
 	EditController controller;
 	Member member;
-	JButton bt_reg,bt_exit;
+	JButton bt_reg;
 	
-	public ClientEdit(String id) {
-		this.id= id;
+	public ClientEdit(	ClientMain clientMain) {
+		setLayout(new BorderLayout());
+		this.member=clientMain.member;
 		controller = new EditController(id);
 		p_content = new JPanel();
 		p_img =new JPanel();
@@ -65,7 +62,6 @@ public class ClientEdit extends JFrame implements FocusListener,ActionListener{
 		ch_mon = new JComboBox<>();
 		ch_day = new JComboBox<>();
 		bt_reg = new JButton("수정");
-		bt_exit = new JButton("나가기");
 		cb_phone=  new JComboBox<>();
 		//cb_phone.addItem(item);
 		
@@ -84,7 +80,6 @@ public class ClientEdit extends JFrame implements FocusListener,ActionListener{
 		};
 	
 		controller.getMember();
-		member =controller.getMemberInstance();
 		t_id.setText(member.getMember_login_id());
 		t_pw.setText(member.getMember_login_pw());
 		t_name.setText(member.getMember_name());
@@ -160,16 +155,12 @@ public class ClientEdit extends JFrame implements FocusListener,ActionListener{
 		p_container.add(ch_day);
 		p_container.add(t_coupon);
 		p_container.add(bt_reg);
-		p_container.add(bt_exit);
-		
-		
-	
 		
 		add(p_img,BorderLayout.NORTH);
 		p_content.add(p_container);
 		add(p_content);
 		setVisible(true);
-		setSize(300*2, 400*2);
+		setPreferredSize(new Dimension(300*2, 400*2));
 	
 		
 	}
@@ -243,8 +234,6 @@ public class ClientEdit extends JFrame implements FocusListener,ActionListener{
 		Object obj = e.getSource();
 		if(obj==bt_reg){
 			controller.editMember();
-		}else if(obj==bt_exit){
-			dispose();
 		}
 	}
 	

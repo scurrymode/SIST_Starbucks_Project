@@ -36,7 +36,7 @@ public class ClientMenuPanel extends JPanel implements ActionListener{
 		int id = product.getProduct_id();
 		try {
 			//제품 이미지 가져오기
-			URL url = new URL("http://211.238.142.118:9090/data/"+id+".jpg");
+			URL url = new URL("http://localhost:9090/data/"+id+".jpg");
 			image = ImageIO.read(url);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -54,10 +54,7 @@ public class ClientMenuPanel extends JPanel implements ActionListener{
 		
 		la_name = new JLabel(product.getProduct_name());
 		la_price = new JLabel(Integer.toString(product.getProduct_price()));
-		bt = new JButton("추가하기");
-		
-		
-		
+		bt = new JButton("추가하기");		
 		bt.addActionListener(this);
 		
 		add(can);
