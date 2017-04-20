@@ -17,13 +17,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
 import member.MemberWindow;
+import pos.login.PosWindow;
 
 public class AdminPage extends JPanel{
 	
 	JPanel p_home;
 	JTabbedPane tabbedPane;
-	
-	public AdminPage() {
+	PosWindow posWindow;
+	public AdminPage(PosWindow posWindow) {
+		this.posWindow = posWindow;
 		tabbedPane = new JTabbedPane();
 		p_home = new JPanel();
 		tabbedPane.addTab("Ȩ",p_home);
