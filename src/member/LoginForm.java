@@ -22,7 +22,6 @@ import javax.swing.JTextField;
 
 import client.ClientMain;
 import db.DBManager;
-import pos.AdminPage;
 
 public class LoginForm extends JPanel implements ActionListener {
 	MemberWindow memberWindow;
@@ -82,100 +81,84 @@ public class LoginForm extends JPanel implements ActionListener {
 	// 3.맞으면 넘기고 아니면 틀렸다고 오류메세지
 
 	public void loginCheck() {
+		if (t_id.getText().length() == 0) {
+			JOptionPane.showMessageDialog(this, "아이디를 입력해주세요");
+			t_id.requestFocus();
+			return;
+		}
+
+		char[] ch = t_pw.getPassword();
+		String pass = new String(ch);
+		if (pass.length() == 0) {
+			JOptionPane.showMessageDialog(this, "비밀번호를 정확히 입력해주세요");
+			t_pw.requestFocus();
+			return;
+		}
+
 		DBManager manager = DBManager.getInstance();
 		Connection con = manager.getConnection();
 		PreparedStatement pstmt;
 		ResultSet rs;
 		boolean flag_Login = false;
-		boolean admin_Login = false;
 
 		ArrayList<String> list = new ArrayList<String>();
-		ArrayList<String> adminList = new ArrayList<String>();
+
 		String sql1 = "select member_login_id from member";
 
 		try {
 			pstmt = con.prepareStatement(sql1);
 			rs = pstmt.executeQuery();
-			
+
 			while (rs.next()) {
 				list.add(rs.getString("member_login_id"));
 			}
-			
+
 			String id = t_id.getText();
-			char[] pw_array2 = t_pw.getPassword();
-			String pw2 = new String(pw_array2);
-			for (int i=0; i <list.size(); i++) {
-				if (list.get(i).equalsIgnoreCase(id)){
-					flag_Login =true;
+
+			for (int i = 0; i < list.size(); i++) {
+				if (list.get(i).equalsIgnoreCase(id)) {
+					flag_Login = true;
 				}
 			}
-			if(id.equalsIgnoreCase("admin")){
-				String sql = "select emp_login_id from emp where emp_job='manager'";
-				pstmt = con.prepareStatement(sql);
-				rs = pstmt.executeQuery();
-				while(rs.next()){
-					adminList.add(rs.getString("emp_login_id"));
-					for(int i=0;i<adminList.size();i++){
-						if(adminList.get(i).equalsIgnoreCase(id)){
-							admin_Login=true;
-						}
-					}
-				}
-			}
-			if(id.equals("")){
-				JOptionPane.showMessageDialog(this, "ID를 입력해주세요");
-			}
-			else if(pw2.equals("")){
-				JOptionPane.showMessageDialog(this, "비밀번호를 입력해주세여");
-			}else if(admin_Login){
-					String sql = "select emp_login_pw from emp where emp_login_id='"+id+"'";
-					pstmt = con.prepareStatement(sql);
-					rs=pstmt.executeQuery();
+			if (flag_Login) {
+				String sql2 = "select member_login_pw from member where member_login_id='" + id + "'";
+				try {
+					pstmt = con.prepareStatement(sql2);
+					rs = pstmt.executeQuery();
+
 					char[] pw_array = t_pw.getPassword();
 					String pw = new String(pw_array);
+
 					rs.next();
-					String db_pw = rs.getString("emp_login_pw");
-					System.out.println("관리자 비번은 "+db_pw);
-					 	if (db_pw.equals(pw)) {
-						JOptionPane.showMessageDialog(this, "로그인 완료! 관리자님 환영합니다.");
-						//클라이언트 메인 키기
-						memberWindow.page[3].add(new AdminPage(memberWindow));							
-						memberWindow.setPage(3);
-					}else{
-						JOptionPane.showMessageDialog(this, "로그인 실패");
+					String db_pw = rs.getString("member_login_pw");
+
+					// System.out.println("비번은 " + db_pw);
+
+					if (db_pw.equals(pw)) {
+						JOptionPane.showMessageDialog(this, "로그인 완료! " + id + "님 환영합니다.");
+						memberWindow.id = id;
+						// 클라이언트 메인 키기
+						memberWindow.page[2].add(new ClientMain(memberWindow));
+						memberWindow.setPage(2);
+					} else {
+						JOptionPane.showMessageDialog(this, "로그인 정보가 올바르지 않습니다.");
 					}
-			}else if(flag_Login){
-					String sql2 = "select member_login_pw from member where member_login_id='" + id + "'";
-					try {
-						pstmt = con.prepareStatement(sql2);
-						rs = pstmt.executeQuery();
-						char[] pw_array = t_pw.getPassword();
-						String pw = new String(pw_array);
-						rs.next();
-						String db_pw = rs.getString("member_login_pw");
-						
-						System.out.println("비번은 "+db_pw);
-							if (db_pw.equals(pw)) {
-							JOptionPane.showMessageDialog(this, "로그인 완료! "+id+"님 환영합니다.");
-							memberWindow.id=id;
-							//클라이언트 메인 키기
-							memberWindow.page[2].add(new ClientMain(memberWindow));							
-							memberWindow.setPage(2);
-						}else{
-							JOptionPane.showMessageDialog(this, "로그인 실패");
-						}
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}else{
-					JOptionPane.showMessageDialog(this, "로그인 실패");
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-		
+
+			} else {
+				System.out.println("여기군 아이디없어서?");
+				JOptionPane.showMessageDialog(this, "로그인 정보가 올바르지 않습니다.");
+			}
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+
 	}
+
 	// String id = t_id.getText();
 	// String pw = new String(t_pw.getPassword());// char[]캐릭터 배열로반환
 	// if (id.equals("batman") && pw.equals("1234")) {

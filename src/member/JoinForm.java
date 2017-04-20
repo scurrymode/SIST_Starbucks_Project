@@ -189,12 +189,19 @@ public class JoinForm extends JPanel implements ActionListener {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		JOptionPane.showMessageDialog(this, "회원가입이 완료되었습니다.");
-		memberWindow.setPage(0);
+
 	}
 
 	public void cancel() {
-		memberWindow.setPage(0);
+		id_t.setText("");
+		pw_t.setText("");
+		name_t.setText("");
+		nickname_t.setText("");
+		phone_t1.select(0);
+		phone_t2.setText("");
+		phone_t3.setText("");
+		birth_t.setText("");
+
 	}
 
 	public void id_over_ck() {
@@ -237,8 +244,7 @@ public class JoinForm extends JPanel implements ActionListener {
 		SQLException e) {
 			e.printStackTrace();
 		}
-		
-		
+
 	}
 
 	public boolean join_valCheck() {
@@ -264,7 +270,7 @@ public class JoinForm extends JPanel implements ActionListener {
 		} else if (birth_t.getText().equals("")) {
 			JOptionPane.showMessageDialog(this, "☆필수☆ 생년월일을 입력해주세요.");
 			re = false;
-		} 
+		}
 
 		return re;
 	}

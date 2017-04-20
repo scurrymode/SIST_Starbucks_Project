@@ -22,9 +22,8 @@ public class AdminPage extends JPanel{
 	
 	JPanel p_home;
 	JTabbedPane tabbedPane;
-	MemberWindow memberWindow;
-	public AdminPage(MemberWindow memberWindow) {
-		this.memberWindow = memberWindow;
+	
+	public AdminPage() {
 		tabbedPane = new JTabbedPane();
 		p_home = new JPanel();
 		tabbedPane.addTab("Ȩ",p_home);
