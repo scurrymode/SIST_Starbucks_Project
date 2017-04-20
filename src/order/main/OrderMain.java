@@ -6,14 +6,16 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -25,28 +27,27 @@ import javax.swing.JScrollPane;
 import db.DBManager;
 import order.payment.Payment;
 
-public class OrderMain extends JFrame implements ActionListener{
+public class OrderMain extends JFrame implements ActionListener,Runnable{
 	Connection con;
 	DBManager manager;
-	
+	Thread thread;
 	//	p_east 전체화면 동쪽, p_west 전체화면 서쪽 p_product 주문한거뜨는 곳,p_topMenu메뉴 상위 버튼들 있는곳 p_subMenu메뉴 하위버튼들 p_pay 결제하기버튼 있는 곳 
-	//
-	JPanel p_product,p_component,p_topMenu,p_subMenu, p_sum,p_pay , p_east, p_west ;
+
+	JPanel p_product,p_component,p_topMenu,p_subMenu, p_sum,p_pay , p_east, p_west ,p_date ;
 	JButton bt_pay, bt_allDelete;
 	JScrollPane scroll;
 	
-	JLabel la_sum_name,la_sum,la_info ;
+	JLabel la_sum_name,la_sum,la_info ,la_date;
 	Vector<Product_category> bigMenu=new Vector<Product_category>();//상위 메뉴들 들어있음(커피,쥬스.빵)
 	Vector <Product> product_list=new Vector<Product>();	 //product 하위 메뉴들의 정보가 들어있음 
 	Vector<ProductPanel> menu_list=new Vector<ProductPanel>();
 	Vector<Orders> orders_list=new Vector<Orders>();
 	
-	
 	int total;
 	int order_number=1;
 	
-	
 	public OrderMain() {
+		p_date=new JPanel();
 		p_east=new JPanel();
 		p_west=new JPanel();
 		p_product=new JPanel();
@@ -59,20 +60,22 @@ public class OrderMain extends JFrame implements ActionListener{
 		
 		bt_allDelete=new JButton("모두삭제");
 		bt_pay=new JButton("결제하기");
+		
+		la_date=new JLabel("시간");
 		la_sum_name=new JLabel("합계:");
 		la_sum=new JLabel("0");
 		la_sum_name.setFont(new Font("돋움", Font.BOLD, 30));
 		la_sum.setFont(new Font("돋움", Font.BOLD, 30));
 		
 		
-		la_info=new JLabel("제품명       수량       금액");
+		la_info=new JLabel("제품명       수량         금액");
 		la_info.setFont(new Font("돋움", Font.BOLD , 50 ));
 		
-		
-		
+
 		Product dto = new Product();
 		
 		//패널 크기 지정
+		p_date.setPreferredSize(new Dimension(250, 100));
 		p_east.setPreferredSize(new Dimension(250, 800));
 		p_west.setPreferredSize(new Dimension(750, 800));
 		p_product.setPreferredSize(new Dimension(750,100)); //주문한거 뜨는곳 
@@ -82,14 +85,10 @@ public class OrderMain extends JFrame implements ActionListener{
 		p_subMenu.setPreferredSize(new Dimension(250,600)); //(하위)주문버튼들
 		p_pay.setPreferredSize(new Dimension(250,100)); //결제하기 버튼 있는 패널
 		
-		p_sum.setBackground(Color.YELLOW);
-		p_product.setBackground(Color.PINK);
-		p_subMenu.setBackground(Color.ORANGE);
-		p_topMenu.setBackground(Color.WHITE);
-		//p_delete.setBackground(Color.WHITE);
-		p_pay.setBackground(Color.GREEN);
-		p_component.setBackground(Color.RED);		
-		
+		p_sum.setBackground(Color.LIGHT_GRAY);
+		p_product.setBackground(Color.LIGHT_GRAY);
+		p_component.setBackground(Color.LIGHT_GRAY);		
+		p_date.setBackground(Color.WHITE);
 		//서쪽 제품명, 종류, 가격 라벨 붙이기 ㅡ 삭제버튼 ㅡ합계
 		p_west.setLayout(new FlowLayout());
 		p_west.add(p_product);
@@ -100,6 +99,7 @@ public class OrderMain extends JFrame implements ActionListener{
 		//p_sum.add(bt_allDelete,BorderLayout.WEST);
 		p_product.add(la_info);
 		
+		
 		add(p_west);
 		p_west.add(scroll);
 		scroll.setPreferredSize(new Dimension(750,600));
@@ -108,24 +108,30 @@ public class OrderMain extends JFrame implements ActionListener{
 		p_east.setLayout(new FlowLayout());
 		p_east.add(p_topMenu);
 		p_east.add(p_subMenu);
+		
+		p_east.add(p_date);
+		p_date.add(la_date);
 		p_east.add(p_pay);
+		
 		add(p_east,BorderLayout.EAST);
-	
+		
 		p_pay.add(bt_pay);
 		
 		//bt_allDelete.addActionListener(this);
 		bt_pay.addActionListener(this);
-		
-		
-		setSize(1000,800);
+
+		setSize(1000,900);
 		setVisible(true);
-		setLocationRelativeTo(null);
+		setLocationRelativeTo(null);                                      
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-	
+
+		thread=new Thread(this);
+		thread.start();
+		
 		init();
 		getMenu();
 		getSubMenu();
-		
+
 		
 		
 	}
@@ -154,6 +160,8 @@ public class OrderMain extends JFrame implements ActionListener{
 				bigMenu.add(vo); 
 				//prduct_category_name 만큼 버튼 생성
 				JButton bt = new JButton(vo.getProduct_category_name());
+				bt.setBackground(Color.WHITE);
+				bt.setPreferredSize(new Dimension(70, 50));
 				bt.addActionListener(this);
 				System.out.println(bt.getText());
 				p_topMenu.add(bt);
@@ -189,10 +197,7 @@ public class OrderMain extends JFrame implements ActionListener{
 		
 		try {
 			pstmt=con.prepareStatement(sql);
-		
 			rs=pstmt.executeQuery();
-			
-			
 			
 			while(rs.next()){
 				Product dto=new Product();
@@ -275,6 +280,8 @@ public class OrderMain extends JFrame implements ActionListener{
 						JButton bt=new JButton(product_list.get(a).getProduct_name());
 						System.out.println("이거누르면 또 생성데");
 						bt.addActionListener(this);
+						bt.setBackground(Color.WHITE);
+						bt.setPreferredSize(new Dimension(200, 50));
 						
 						p_subMenu.add(bt);
 						p_subMenu.updateUI();
@@ -296,7 +303,6 @@ public class OrderMain extends JFrame implements ActionListener{
 			orders.setOrders_emp_id(2);
 			orders.setOrders_client_id(order_number);
 			
-			
 			orders_list.add(orders);
 			
 		}
@@ -311,8 +317,6 @@ public class OrderMain extends JFrame implements ActionListener{
 		
 		System.out.println(orders_list.size());
 		
-
-		
 	}
 	
 	public void Sum(){
@@ -326,11 +330,31 @@ public class OrderMain extends JFrame implements ActionListener{
 		
 	}
 	
+	public void date(){
+			Calendar calendar=Calendar.getInstance();
+			Date date=calendar.getTime();
+			String today=(new SimpleDateFormat("yyyy-MM-dd HH시 mm분 ss초").format(date));
+		
+			la_date.setText(today);
+			la_date.setFont(new Font("돋움", Font.BOLD, 15));
+			p_date.updateUI();
+		
+	}
 	
-	
-	
+	//시간
+	public void run() {
+		while(true){
+			date();
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 	public static void main(String[] args) {
 		new OrderMain();
 	}
-
+	
 }
