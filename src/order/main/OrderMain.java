@@ -6,8 +6,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,16 +29,19 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import db.DBManager;
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.advanced.AdvancedPlayer;
 import order.payment.Payment;
 
 public class OrderMain extends JFrame implements ActionListener,Runnable{
 	Connection con;
 	DBManager manager;
 	Thread thread;
+	MusicThread music;
 	//	p_east 전체화면 동쪽, p_west 전체화면 서쪽 p_product 주문한거뜨는 곳,p_topMenu메뉴 상위 버튼들 있는곳 p_subMenu메뉴 하위버튼들 p_pay 결제하기버튼 있는 곳 
 
-	JPanel p_product,p_component,p_topMenu,p_subMenu, p_sum,p_pay , p_east, p_west ,p_date ;
-	JButton bt_pay, bt_allDelete;
+	JPanel p_pos,p_product,p_component,p_topMenu,p_subMenu, p_sum,p_pay , p_east, p_west ,p_date,p_music ,p_etc ,p_con;
+	JButton bt_pay, bt_allDelete,bt_stop,bt_play,bt_reservation, bt_reservation_show ,bt_income , bt_stock;
 	JScrollPane scroll;
 	
 	JLabel la_sum_name,la_sum,la_info ,la_date;
@@ -47,19 +54,45 @@ public class OrderMain extends JFrame implements ActionListener,Runnable{
 	int order_number=1;
 	
 	public OrderMain() {
-		p_date=new JPanel();
 		p_east=new JPanel();
 		p_west=new JPanel();
+		p_pos=new JPanel();
 		p_product=new JPanel();
-		p_subMenu=new JPanel(); 
-		p_topMenu=new JPanel();
+		p_component=new JPanel();
 		p_sum=new JPanel();
 		p_pay=new JPanel();
-		p_component=new JPanel();
+
+		p_topMenu=new JPanel();
+		p_subMenu=new JPanel(); 
+		p_etc=new JPanel();
+		p_con=new JPanel();
+		p_date=new JPanel();
+		p_music=new JPanel();
+	
 		scroll=new JScrollPane(p_component);
 		
 		bt_allDelete=new JButton("모두삭제");
 		bt_pay=new JButton("결제하기");
+		bt_play=new JButton("▶");
+		bt_stop=new JButton("||");
+		
+		bt_reservation=new JButton("예약하기");
+		bt_reservation_show=new JButton("예약현황");
+		bt_income=new JButton("매출현황");
+		bt_stock=new JButton("재고현황");
+		
+		bt_reservation.setBackground(Color.WHITE);
+		bt_reservation.setPreferredSize(new Dimension(150, 50));
+		
+		bt_reservation_show.setBackground(new Color(183, 30, 30));
+		bt_reservation_show.setPreferredSize(new Dimension(150, 50));
+		
+		bt_income.setBackground(Color.WHITE);
+		bt_income.setPreferredSize(new Dimension(150, 50));
+		
+		bt_stock.setBackground(Color.WHITE);
+		bt_stock.setPreferredSize(new Dimension(150, 50));
+		
 		
 		la_date=new JLabel("시간");
 		la_sum_name=new JLabel("합계:");
@@ -68,66 +101,95 @@ public class OrderMain extends JFrame implements ActionListener,Runnable{
 		la_sum.setFont(new Font("돋움", Font.BOLD, 30));
 		
 		
-		la_info=new JLabel("제품명       수량         금액");
-		la_info.setFont(new Font("돋움", Font.BOLD , 50 ));
+		la_info=new JLabel("제품명  수량   금액");
+		la_info.setFont(new Font("돋움", Font.BOLD , 30 ));
 		
 
 		Product dto = new Product();
 		
 		//패널 크기 지정
-		p_date.setPreferredSize(new Dimension(250, 100));
-		p_east.setPreferredSize(new Dimension(250, 800));
-		p_west.setPreferredSize(new Dimension(750, 800));
-		p_product.setPreferredSize(new Dimension(750,100)); //주문한거 뜨는곳 
-		p_sum.setPreferredSize(new Dimension(750, 100));
-		p_component.setPreferredSize(new Dimension(750,600));
-		p_topMenu.setPreferredSize(new Dimension(250,100));//(상위)커피. 음료. 빵 세개의 버튼
-		p_subMenu.setPreferredSize(new Dimension(250,600)); //(하위)주문버튼들
-		p_pay.setPreferredSize(new Dimension(250,100)); //결제하기 버튼 있는 패널
+		p_east.setPreferredSize(new Dimension(800, 800));
+		p_west.setPreferredSize(new Dimension(400, 800));
+		p_date.setPreferredSize(new Dimension(400, 50));
+		p_pos.setPreferredSize(new Dimension(400, 150));
+		p_product.setPreferredSize(new Dimension(400,50)); //주문한거 뜨는곳 
+		p_sum.setPreferredSize(new Dimension(400, 100));
+		p_component.setPreferredSize(new Dimension(400,350));
+		p_topMenu.setPreferredSize(new Dimension(800,70));//(상위)커피. 음료. 빵 세개의 버튼
+		p_subMenu.setPreferredSize(new Dimension(800,600)); //(하위)주문버튼들
+		p_music.setPreferredSize(new Dimension(400, 50));
+		p_pay.setPreferredSize(new Dimension(400,150)); //결제하기 버튼 있는 패널
+		p_etc.setPreferredSize(new Dimension(800, 80));
+		p_con.setPreferredSize(new Dimension(800, 50));
 		
-		p_sum.setBackground(Color.LIGHT_GRAY);
+		//p_west 패널에 p_pos, p_product , p_component,p_sum, p_pay
+		p_pos.setBackground(Color.LIGHT_GRAY);
 		p_product.setBackground(Color.LIGHT_GRAY);
 		p_component.setBackground(Color.LIGHT_GRAY);		
+		p_sum.setBackground(Color.LIGHT_GRAY);
+		p_pay.setBackground(Color.LIGHT_GRAY);
+	
+		
+		//p_east 패널에 p_topMenu,p_subMenu,p_etc,p_date , p_music
+/*		p_topMenu.setBackground(Color.BLACK);
+		p_subMenu.setBackground(Color.CYAN);
+		p_etc.setBackground(Color.GREEN);
 		p_date.setBackground(Color.WHITE);
-		//서쪽 제품명, 종류, 가격 라벨 붙이기 ㅡ 삭제버튼 ㅡ합계
+*/		
+		
+		//서쪽 버튼 누르면 p_component 에 생성됨
 		p_west.setLayout(new FlowLayout());
+		p_west.add(p_pos);
 		p_west.add(p_product);
+		p_product.add(la_info);
 		p_west.add(p_component);
 		p_west.add(p_sum);
 		p_sum.add(la_sum_name);
 		p_sum.add(la_sum);
 		//p_sum.add(bt_allDelete,BorderLayout.WEST);
-		p_product.add(la_info);
+		p_west.add(p_pay);
+		p_pay.add(bt_pay);
 		
+		add(p_west,BorderLayout.CENTER);
+		//p_west.add(scroll);
+		//scroll.setPreferredSize(new Dimension(750,600));
 		
-		add(p_west);
-		p_west.add(scroll);
-		scroll.setPreferredSize(new Dimension(750,600));
-		
-		//동쪽 메뉴버튼들 ㅡ 결제하기 버튼
+		//동쪽 메뉴버튼들  , 시간이랑 음악플레이버튼 
 		p_east.setLayout(new FlowLayout());
 		p_east.add(p_topMenu);
 		p_east.add(p_subMenu);
+		p_east.add(p_etc);
+		p_etc.add(bt_reservation);
+		p_etc.add(bt_reservation_show);
+		p_etc.add(bt_income);
+		p_etc.add(bt_stock);
+		p_east.add(p_con);
 		
-		p_east.add(p_date);
-		p_date.add(la_date);
-		p_east.add(p_pay);
+		p_con.setLayout(new GridLayout(1,2));
+		p_con.add(p_music);
+		p_con.add(p_date);
 		
 		add(p_east,BorderLayout.EAST);
+		p_date.add(la_date);
 		
-		p_pay.add(bt_pay);
+		p_music.add(bt_stop);
+		p_music.add(bt_play);
+		
+		//add(p_east,BorderLayout.EAST);
 		
 		//bt_allDelete.addActionListener(this);
 		bt_pay.addActionListener(this);
-
-		setSize(1000,900);
+		bt_play.addActionListener(this);
+		
+		
+		setSize(1200,850);
 		setVisible(true);
 		setLocationRelativeTo(null);                                      
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 		thread=new Thread(this);
 		thread.start();
-		
+	
 		init();
 		getMenu();
 		getSubMenu();
@@ -241,6 +303,9 @@ public class OrderMain extends JFrame implements ActionListener,Runnable{
 		}else if(obj.getText().equals("coffee") ||obj.getText().equals("drink")||obj.getText().equals("bread") ){
 			ShowMenu(obj);
 			
+		}else if(obj==bt_play){
+			musicStart();
+			
 		}else{
 			for(int i=0;i<product_list.size();i++){
 				if(obj.getText().equals(product_list.get(i).getProduct_name())){
@@ -339,6 +404,12 @@ public class OrderMain extends JFrame implements ActionListener,Runnable{
 			la_date.setFont(new Font("돋움", Font.BOLD, 15));
 			p_date.updateUI();
 		
+			
+	}
+	
+	public void musicStart(){
+		music=new MusicThread();
+		music.start();
 	}
 	
 	//시간
@@ -352,6 +423,7 @@ public class OrderMain extends JFrame implements ActionListener,Runnable{
 				e.printStackTrace();
 			}
 		}
+		
 	}
 	public static void main(String[] args) {
 		new OrderMain();
