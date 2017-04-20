@@ -57,6 +57,7 @@ public class CardThread extends Thread{
 				JOptionPane.showMessageDialog(main, "카드 등록 성공!");
 				main.dispose();
 				main.main.dispose();
+				main.main.main.getList();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
