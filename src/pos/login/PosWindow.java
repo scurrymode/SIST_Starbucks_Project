@@ -5,8 +5,6 @@ import java.awt.FlowLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import client.ClientMain;
-
 //이 윈도우는 크기가 결정되어있지 않아야 한다.
 //(로그인 폼을 지나고 지나면 그대로커지는 형태) 
 //왜? 윈도우 안에 들어오게 될 패널이 그 크기를 결정하게되므로 

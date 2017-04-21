@@ -9,26 +9,37 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import com.sun.media.jfxmedia.MediaError;
+
 import db.DBManager;
+import javafx.collections.FXCollections;
+import javafx.scene.media.MediaPlayer.Status;
+import javafx.stage.Stage;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.advanced.AdvancedPlayer;
 import order.payment.Payment;
@@ -39,10 +50,11 @@ public class OrderMain extends JPanel implements ActionListener,Runnable{
 	DBManager manager;
 	Thread thread;
 	MusicThread music;
+	
 	//	p_east 전체화면 동쪽, p_west 전체화면 서쪽 p_product 주문한거뜨는 곳,p_topMenu메뉴 상위 버튼들 있는곳 p_subMenu메뉴 하위버튼들 p_pay 결제하기버튼 있는 곳 
 
-	JPanel p_pos,p_product,p_component,p_topMenu,p_subMenu, p_sum,p_pay , p_east, p_west ,p_date,p_music ,p_etc ,p_con;
-	JButton bt_pay, bt_allDelete,bt_stop,bt_play,bt_reservation, bt_reservation_show ,bt_income , bt_stock;
+	JPanel p_pos,p_product,p_component,p_topMenu,p_subMenu, p_sum,p_pay , p_east, p_west ,p_date,p_music ,p_etc ,p_con ,p_list;
+	JButton bt_pay, bt_allDelete,bt_stop,bt_play, bt_list, bt_prev, bt_next,bt_reservation, bt_reservation_show ,bt_income , bt_stock ;
 	JScrollPane scroll;
 	
 	JLabel la_sum_name,la_sum,la_info ,la_date;
@@ -53,8 +65,11 @@ public class OrderMain extends JPanel implements ActionListener,Runnable{
 	PosWindow posWindow;
 	int total;
 	int order_number=1;
+	JButton obj;
+	private Iterator<String> songIterator;
 	
 	public OrderMain(PosWindow posWindow) {
+		
 		this.posWindow =posWindow;
 		p_date=new JPanel();
 
@@ -75,8 +90,16 @@ public class OrderMain extends JPanel implements ActionListener,Runnable{
 	
 		scroll=new JScrollPane(p_component);
 		
-		bt_allDelete=new JButton("모두삭제");
+		bt_allDelete=new JButton("전체삭제");
 		bt_pay=new JButton("결제하기");
+		bt_allDelete.setBackground(Color.WHITE);
+		bt_pay.setBackground(Color.WHITE);
+		bt_allDelete.setPreferredSize(new Dimension(150, 50));
+		bt_pay.setPreferredSize(new Dimension(150, 50));
+		
+		bt_list=new JButton("목록");
+		bt_next=new JButton("▶▶");
+		bt_prev=new JButton("◀◀");
 		bt_play=new JButton("▶");
 		bt_stop=new JButton("||");
 		
@@ -135,12 +158,7 @@ public class OrderMain extends JPanel implements ActionListener,Runnable{
 	
 		
 		//p_east 패널에 p_topMenu,p_subMenu,p_etc,p_date , p_music
-/*		p_topMenu.setBackground(Color.BLACK);
-		p_subMenu.setBackground(Color.CYAN);
-		p_etc.setBackground(Color.GREEN);
-		p_date.setBackground(Color.WHITE);
-*/		
-		
+
 		//서쪽 버튼 누르면 p_component 에 생성됨
 		p_west.setLayout(new FlowLayout());
 		p_west.add(p_pos);
@@ -151,7 +169,9 @@ public class OrderMain extends JPanel implements ActionListener,Runnable{
 		p_sum.add(la_sum_name);
 		p_sum.add(la_sum);
 		//p_sum.add(bt_allDelete,BorderLayout.WEST);
+	
 		p_west.add(p_pay);
+		p_pay.add(bt_allDelete);
 		p_pay.add(bt_pay);
 		
 		add(p_west,BorderLayout.CENTER);
@@ -176,15 +196,20 @@ public class OrderMain extends JPanel implements ActionListener,Runnable{
 		add(p_east,BorderLayout.EAST);
 		p_date.add(la_date);
 		
+		p_music.add(bt_prev);
+		
 		p_music.add(bt_stop);
 		p_music.add(bt_play);
-		
+		p_music.add(bt_next);
+		p_music.add(bt_list);
 		//add(p_east,BorderLayout.EAST);
 		
-		//bt_allDelete.addActionListener(this);
+		bt_allDelete.addActionListener(this);
 		bt_pay.addActionListener(this);
 		bt_play.addActionListener(this);
-		
+		bt_stop.addActionListener(this);
+		bt_list.addActionListener(this);
+		bt_next.addActionListener(this);
 		
 		setSize(1200,850);
 		setVisible(true);
@@ -197,8 +222,6 @@ public class OrderMain extends JPanel implements ActionListener,Runnable{
 		getMenu();
 		getSubMenu();
 
-		
-		
 	}
 	//데이터베이스 커넥션 얻어오기
 	public void init(){
@@ -298,18 +321,30 @@ public class OrderMain extends JPanel implements ActionListener,Runnable{
 	//버튼 누르면 배열에 올라가기!!!  결제하기 삭제하기
 	public void actionPerformed(ActionEvent e) {
 		//p_subMenu.removeAll();
-		JButton obj=(JButton)e.getSource();
+		obj=(JButton)e.getSource();
 		//p_subMenu.g
-		if(obj==bt_pay){
+		if(obj==bt_pay){ //결체버튼
 			pay( );
 			
-		}else if(obj.getText().equals("coffee") ||obj.getText().equals("drink")||obj.getText().equals("bread") ){
+		}else if(obj==bt_allDelete){//전체삭제
+			allDelete();
+			
+		}else if(obj.getText().equals("coffee") ||obj.getText().equals("drink")||obj.getText().equals("bread") ){ 
 			ShowMenu(obj);
 			
-		}else if(obj==bt_play){
+		}else if(obj==bt_play){//음악재생
 			musicStart();
+		
+		}else if(obj==bt_stop){//음악멈추기
+			musicStop();
+		
+		}else if(obj==bt_next){
+			nextMusic();
 			
-		}else{
+		}else if(obj==bt_list){//MP3 목록
+			//musicList();
+			
+		}else{ //메뉴 넣기
 			for(int i=0;i<product_list.size();i++){
 				if(obj.getText().equals(product_list.get(i).getProduct_name())){
 					InsertMenu(product_list.get(i));
@@ -320,7 +355,7 @@ public class OrderMain extends JPanel implements ActionListener,Runnable{
 		}
 	}
 
-	//배열에 아메리카노 올리라고!!!!!!!!!!!!!!!!!! 
+	//배열에 아메리카노 올리라고!!!!!!!!!!!!!!!!!! 하나 추가되면서 합계실행
 	private void InsertMenu(Product product) {
 		
 		System.out.println(product.getProduct_name());
@@ -338,6 +373,7 @@ public class OrderMain extends JPanel implements ActionListener,Runnable{
 	
 	}
 	
+	//Topcategory 인 커피, 주스, 빵 버튼 생성하기 
 	public void ShowMenu(JButton obj){
 		p_subMenu.removeAll();
 		for(int i=0;i<bigMenu.size();i++){
@@ -358,6 +394,33 @@ public class OrderMain extends JPanel implements ActionListener,Runnable{
 				}
 			}
 		}
+	}
+	
+	//전체삭제 버튼 누르면 메뉴 전체삭제
+	public void allDelete(){
+		int ans=JOptionPane.showConfirmDialog(this, "전체삭제?");
+		if(ans==JOptionPane.OK_OPTION){
+			total=0;
+			menu_list.removeAll(menu_list);
+			p_component.removeAll();
+			p_component.updateUI();
+			la_sum.setText("0");
+			
+		}
+	}
+	
+	public void Sum(){
+		
+		int s=0;
+		System.out.println(s);
+		for(int i=0;i<menu_list.size();i++){
+			String sum=menu_list.get(i).la_total.getText();
+			s+=Integer.parseInt(sum);
+			
+		}
+		la_sum.setText(Integer.toString(s));
+		System.out.println(s);
+		total=s;
 	}
 	
 	//결제하기 버튼 누르면 정보DTO 를 결제창을 넘기고싶어.ㅇ......
@@ -387,21 +450,11 @@ public class OrderMain extends JPanel implements ActionListener,Runnable{
 		
 	}
 	
-	public void Sum(){
-		total=0;
-		for(int i=0;i<menu_list.size();i++){
-			String sum=menu_list.get(i).la_total.getText();
-			total+=Integer.parseInt(sum);
-			
-		}
-		la_sum.setText(Integer.toString(total));
-		
-	}
 	
 	public void date(){
 			Calendar calendar=Calendar.getInstance();
 			Date date=calendar.getTime();
-			String today=(new SimpleDateFormat("yyyy-MM-dd HH시 mm분 ss초").format(date));
+			String today=(new SimpleDateFormat("yyyy-MM-dd HH: mm: ss").format(date));
 		
 			la_date.setText(today);
 			la_date.setFont(new Font("돋움", Font.BOLD, 15));
@@ -411,9 +464,40 @@ public class OrderMain extends JPanel implements ActionListener,Runnable{
 	}
 	
 	public void musicStart(){
+		System.out.println("재생");
 		music=new MusicThread();
+		music.run();
+		music.r
 		music.start();
+		
 	}
+	public void musicStop(){
+		System.out.println("멈춰라");
+		music.mediaPlayer.pause();
+		
+		
+	}
+	
+	public void nextMusic(){
+		
+		
+	}
+	//public void musicList(){
+//		System.out.println("목록가져와");
+	//	File file=new File("C:/myserver/data");		
+
+/*		//출력할 파일 경로
+		try {
+			BufferedWriter buffr=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
+			ArrayList list=new ArrayList();
+			
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	*/
+	//}
 	
 	//시간
 	public void run() {
@@ -428,4 +512,5 @@ public class OrderMain extends JPanel implements ActionListener,Runnable{
 		}
 		
 	}
+
 }

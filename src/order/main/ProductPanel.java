@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -11,7 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-public class ProductPanel extends JPanel{
+public class ProductPanel extends JPanel {
 	Product info;
 	JLabel la_name;
 	JLabel la_number;
@@ -32,7 +34,8 @@ public class ProductPanel extends JPanel{
 			}
 			
 		});
-		 
+		
+	
 		//라벨 두개로 나눠서 합계부분라벨 따로 두기 
 		la_name=new JLabel(info.getProduct_name());
 		la_name.setPreferredSize(new Dimension(200, 50));
@@ -55,6 +58,7 @@ public class ProductPanel extends JPanel{
 		//setPreferredSize(new Dimension(400,350));		
 	}
 
+
 	
 	public void deleteMenu(){
 		int ans=JOptionPane.showConfirmDialog(orderMain.p_component,"삭제?");
@@ -65,30 +69,12 @@ public class ProductPanel extends JPanel{
 			orderMain.p_component.updateUI();
 			orderMain.Sum();
 			
-			/*			
-			int index=0;
-			int length=orderMain.product_list.size();
-			
-			System.out.println("현재 갯수는 "+length);
-			
-			for(int i=0; i <length;i++){
-				if(orderMain.menu_list.get(i)==this){
-					index=i;					
-				}
-			}
-			System.out.println(index+" 를 지울께요~~");
-			try{
-				orderMain.menu_list.remove(index);
-			}catch(Exception e){
-				System.out.println("에러발생 후 지우려는 index는 "+index);	
-			}
- 			*/			
 		}
-		
-		
 		System.out.println(orderMain.menu_list.size());
 		
-	
-		
 	}
+	
+	
+
+
 }

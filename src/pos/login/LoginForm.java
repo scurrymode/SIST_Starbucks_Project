@@ -42,8 +42,8 @@ public class LoginForm extends JPanel implements ActionListener {
 		p_south = new JPanel();
 		la_id = new JLabel("ID");
 		la_pw = new JLabel("Password");
-		t_id = new JTextField("", 15);
-		t_pw = new JPasswordField("", 15);
+		t_id = new JTextField("jangs", 15);
+		t_pw = new JPasswordField("1234", 15);
 		bt_login = new JButton("·Î±×ÀÎ");
 
 		container.setLayout(new BorderLayout());
@@ -66,7 +66,7 @@ public class LoginForm extends JPanel implements ActionListener {
 		
 
 		setPreferredSize(new Dimension(400, 100));
-		setBackground(Color.PINK);
+		//setBackground(Color.PINK);
 	}
 
 	public void joinCheck() {
