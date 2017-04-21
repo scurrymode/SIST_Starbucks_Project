@@ -26,8 +26,9 @@ import javax.swing.JScrollPane;
 
 import db.DBManager;
 import order.payment.Payment;
+import pos.login.PosWindow;
 
-public class OrderMain extends JFrame implements ActionListener,Runnable{
+public class OrderMain extends JPanel implements ActionListener,Runnable{
 	Connection con;
 	DBManager manager;
 	Thread thread;
@@ -42,11 +43,12 @@ public class OrderMain extends JFrame implements ActionListener,Runnable{
 	Vector <Product> product_list=new Vector<Product>();	 //product 하위 메뉴들의 정보가 들어있음 
 	Vector<ProductPanel> menu_list=new Vector<ProductPanel>();
 	Vector<Orders> orders_list=new Vector<Orders>();
-	
+	PosWindow posWindow;
 	int total;
 	int order_number=1;
 	
-	public OrderMain() {
+	public OrderMain(PosWindow posWindow) {
+		this.posWindow =posWindow;
 		p_date=new JPanel();
 		p_east=new JPanel();
 		p_west=new JPanel();
@@ -122,8 +124,7 @@ public class OrderMain extends JFrame implements ActionListener,Runnable{
 
 		setSize(1000,900);
 		setVisible(true);
-		setLocationRelativeTo(null);                                      
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
 
 		thread=new Thread(this);
 		thread.start();
@@ -353,8 +354,4 @@ public class OrderMain extends JFrame implements ActionListener,Runnable{
 			}
 		}
 	}
-	public static void main(String[] args) {
-		new OrderMain();
-	}
-	
 }

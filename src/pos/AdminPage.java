@@ -16,12 +16,16 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
-public class AdminPage extends JFrame{
+import member.MemberWindow;
+import pos.login.PosWindow;
+
+public class AdminPage extends JPanel{
 	
 	JPanel p_home;
 	JTabbedPane tabbedPane;
-	
-	public AdminPage() {
+	PosWindow posWindow;
+	public AdminPage(PosWindow posWindow) {
+		this.posWindow = posWindow;
 		tabbedPane = new JTabbedPane();
 		p_home = new JPanel();
 		tabbedPane.addTab("Ȩ",p_home);
@@ -35,10 +39,7 @@ public class AdminPage extends JFrame{
 		
 		setVisible(true);
 		setSize(800,800);
-		setLocationRelativeTo(null);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
 	}
-	public static void main(String[] args) {
-		new AdminPage();
-	}
+	
 }
