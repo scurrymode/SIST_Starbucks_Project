@@ -32,8 +32,8 @@ public class Member {
 		return member_login_pw;
 	}
 
-	public void setMember_login_pw(String member_login_pw) {
-		this.member_login_pw = member_login_pw;
+	public void setMember_login_pw(String cs) {
+		this.member_login_pw = cs;
 	}
 
 	public String getMember_name() {
