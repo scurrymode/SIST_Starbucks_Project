@@ -19,12 +19,15 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 
+import card.CardThread;
+import dto.Card;
 import dto.Member;
 
 public class ClientEdit extends JPanel implements FocusListener,ActionListener{
@@ -39,14 +42,14 @@ public class ClientEdit extends JPanel implements FocusListener,ActionListener{
 	ImageIO imageIO;
 	URL url;
 	String id;
-	EditController controller;
 	Member member;
 	JButton bt_reg;
+	ClientMain clientMain;
 	
-	public ClientEdit(	ClientMain clientMain) {
+	public ClientEdit(ClientMain clientMain) {
 		setLayout(new BorderLayout());
 		this.member=clientMain.member;
-		controller = new EditController(id);
+		this.clientMain = clientMain;
 		p_content = new JPanel();
 		p_img =new JPanel();
 		p_container = new JPanel();
@@ -78,10 +81,13 @@ public class ClientEdit extends JPanel implements FocusListener,ActionListener{
 				g.drawImage(img, 0, 0,500,250, this);
 			}
 		};
-	
-		controller.getMember();
+		t_id.setEditable(false);
+		t_coupon.setEditable(false);
+
 		t_id.setText(member.getMember_login_id());
+		t_pw.setEchoChar('*');
 		t_pw.setText(member.getMember_login_pw());
+	
 		t_name.setText(member.getMember_name());
 		t_nick.setText(member.getMember_nickname());
 		
@@ -92,9 +98,7 @@ public class ClientEdit extends JPanel implements FocusListener,ActionListener{
 		cb_phone.addItem("019");
 		cb_phone.addItem("016");
 		
-		ch_year.addItem("year");
-		ch_mon.addItem("mon");
-		ch_day.addItem("day");
+		
 		
 		Border border = BorderFactory.createLineBorder(Color.BLACK);
 		t_coupon.setBorder(BorderFactory.createCompoundBorder(border, 
@@ -121,10 +125,10 @@ public class ClientEdit extends JPanel implements FocusListener,ActionListener{
 		t_nick.setPreferredSize(new Dimension(150, 30));
 		t_phone1.setPreferredSize(new Dimension(80, 30));
 		t_phone2.setPreferredSize(new Dimension(80, 30));
-		ch_year.setPreferredSize(new Dimension(110, 30));
-		ch_mon.setPreferredSize(new Dimension(110, 30));
-		ch_day.setPreferredSize(new Dimension(110, 30));
-		cb_phone.setPreferredSize(new Dimension(100, 30));
+		ch_year.setPreferredSize(new Dimension(109, 30));
+		ch_mon.setPreferredSize(new Dimension(109, 30));
+		ch_day.setPreferredSize(new Dimension(109, 30));
+		cb_phone.setPreferredSize(new Dimension(97, 30));
 		can.setPreferredSize(new Dimension(500, 250));
 		//이벤트 연결
 		t_id.addFocusListener(this);
@@ -155,14 +159,13 @@ public class ClientEdit extends JPanel implements FocusListener,ActionListener{
 		p_container.add(ch_day);
 		p_container.add(t_coupon);
 		p_container.add(bt_reg);
+		bt_reg.addActionListener(this);
 		
 		add(p_img,BorderLayout.NORTH);
 		p_content.add(p_container);
 		add(p_content);
 		setVisible(true);
 		setPreferredSize(new Dimension(300*2, 400*2));
-	
-		
 	}
 	@Override
 	public void focusGained(FocusEvent e) {
@@ -230,16 +233,39 @@ public class ClientEdit extends JPanel implements FocusListener,ActionListener{
 	        }
 		}
 	}
+	public void editMember(){
+		
+		Member member = new Member();
+		String pw = new String(t_pw.getPassword());
+		member.setMember_login_id(t_id.getText());
+		member.setMember_login_pw(pw);
+		member.setMember_name(t_name.getText());
+		member.setMember_nickname(t_nick.getText());
+		member.setMember_phone((String)(cb_phone.getSelectedItem())+t_phone1.getText()+t_phone2.getText());
+		member.setMember_birth((String)(ch_year.getSelectedItem())+(String)(ch_mon.getSelectedItem())+(String)(ch_day.getSelectedItem()));
+		
+		MemberThread thread = new MemberThread(member, this);
+		thread.start();
+	}
+	
 	public void actionPerformed(ActionEvent e) {
 		Object obj = e.getSource();
 		if(obj==bt_reg){
-			controller.editMember();
-		}
+			System.out.println(cb_phone.getSelectedItem());
+
+			if(t_pw.getText().equals("비밀번호")||t_re_pw.getText().equals("비밀번호 재확인")){
+				JOptionPane.showMessageDialog(this, "비밀번호를 입력해주세요");
+				System.out.println("dd");
+			}else if(t_name.getText().equals("이름")||t_name.getText().equals("")){
+				JOptionPane.showMessageDialog(this, "이름을 입력해주세요");
+			}else if(t_phone1.getText().equals("")||t_phone2.getText().equals("")){
+				JOptionPane.showMessageDialog(this, "핸드폰번호를 입력해주세요");
+			}else if(t_nick.getText().equals("")){
+				JOptionPane.showMessageDialog(this, "닉네임을 입력해주세요");
+			}else{
+				System.out.println("으잉");
+				editMember();
+				}
+			}
 	}
-	
-	
-	
-	
-	
-	
 }

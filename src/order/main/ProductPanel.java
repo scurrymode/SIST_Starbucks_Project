@@ -35,24 +35,24 @@ public class ProductPanel extends JPanel{
 		 
 		//¶óº§ µÎ°³·Î ³ª´²¼­ ÇÕ°èºÎºÐ¶óº§ µû·Î µÎ±â 
 		la_name=new JLabel(info.getProduct_name());
-		la_name.setPreferredSize(new Dimension(400, 50));
-		la_name.setFont(new Font("µ¸¿ò", Font.BOLD , 30 ));
+		la_name.setPreferredSize(new Dimension(200, 50));
+		la_name.setFont(new Font("µ¸¿ò", Font.BOLD , 20 ));
 		//la_name.setBackground(Color.BLACK);
 		
 		la_number=new JLabel("1");
-		la_number.setPreferredSize(new Dimension(300, 50));
-		la_number.setFont(new Font("µ¸¿ò", Font.BOLD , 30 ));
+		la_number.setPreferredSize(new Dimension(100, 50));
+		la_number.setFont(new Font("µ¸¿ò", Font.BOLD , 20 ));
 		
 		
 		la_total=new JLabel(Integer.toString(info.getProduct_price()));
-		la_total.setPreferredSize(new Dimension(200, 50));
-		la_total.setFont(new Font("µ¸¿ò", Font.BOLD , 30 ));
+		la_total.setPreferredSize(new Dimension(100, 50));
+		la_total.setFont(new Font("µ¸¿ò", Font.BOLD , 20 ));
 		
 		add(la_name,BorderLayout.WEST);
 		add(la_number,BorderLayout.CENTER);
 		add(la_total,BorderLayout.EAST);
 
-		setPreferredSize(new Dimension(750,50));		
+		//setPreferredSize(new Dimension(400,350));		
 	}
 
 	
