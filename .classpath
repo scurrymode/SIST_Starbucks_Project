@@ -3,6 +3,10 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Startbucks lib"/>
+<<<<<<< HEAD
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/StarBucks"/>
+=======
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Starbucks"/>
+>>>>>>> 403b09277239ebf26ae63df45e23c78242e5d99d
 	<classpathentry kind="output" path="bin"/>
 </classpath>
