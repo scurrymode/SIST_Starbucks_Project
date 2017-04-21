@@ -89,6 +89,7 @@ public class LoginForm extends JPanel implements ActionListener {
 		t_id.addMouseListener(new MyMouseListener());
 		t_id.setPreferredSize(new Dimension(380, 35));
 		t_pw = new JPasswordField("PW입력", 20);
+		t_pw.setEchoChar((char)0);
 		t_pw.addMouseListener(new MyMouseListener());
 		t_pw.setPreferredSize(new Dimension(380, 35));
 
@@ -171,11 +172,9 @@ public class LoginForm extends JPanel implements ActionListener {
 		char[] ch = t_pw.getPassword();
 		String pass = new String(ch);
 		if (pass.length() == 0) {
-<<<<<<< HEAD
+
 			JOptionPane.showMessageDialog(this, "비밀번호를 입력해주세요");
-=======
-			JOptionPane.showMessageDialog(this, "비밀번호를 정확히 입력해주세요");
->>>>>>> 33f4970f24461424eefaa48d4d80da40118dcf31
+
 			t_pw.requestFocus();
 			return;
 		}
@@ -226,11 +225,8 @@ public class LoginForm extends JPanel implements ActionListener {
 						memberWindow.page[2].add(new ClientMain(memberWindow));
 						memberWindow.setPage(2);
 					} else {
-<<<<<<< HEAD
 						JOptionPane.showMessageDialog(this, "로그인 정보가 일치하지 않습니다. 아이디나 비밀번호를 확인 후 다시 입력해 주세요");
-=======
-						JOptionPane.showMessageDialog(this, "로그인 정보가 올바르지 않습니다.");
->>>>>>> 33f4970f24461424eefaa48d4d80da40118dcf31
+
 					}
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
@@ -264,6 +260,7 @@ public class LoginForm extends JPanel implements ActionListener {
 			if (e.getSource() == t_id) {
 				t_id.setText("");
 			} else if (e.getSource() == t_pw) {
+				t_pw.setEchoChar('♥');
 				t_pw.setText("");
 			}
 		}
