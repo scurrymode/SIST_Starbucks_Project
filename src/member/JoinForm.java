@@ -36,14 +36,13 @@ import db.DBManager;
 public class JoinForm extends JPanel implements ActionListener {
 
 	MemberWindow memberWindow;
-<<<<<<< HEAD
+
 	JPanel p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p_can, p_can2;
 	JLabel log, log2, pw_la, name_la, nickname_la, gender_la, phone_la, phone_la1, phone_la2, birth_la, birth_la1;
-=======
+
 	JLabel label[] = new JLabel[11]; // Label 배열로 선언
-	JPanel p1, p2, p3, p4, p5, p6, p7, p8, p9, p10;
-	JLabel log, id_la, pw_la, nickname_la, name_la, gender_la, phone_la, phone_la1, phone_la2, birth_la, birth_la1;
->>>>>>> 33f4970f24461424eefaa48d4d80da40118dcf31
+
+
 	JTextField id_t, nickname_t, name_t, phone_t2, phone_t3, birth_t;
 	JPasswordField pw_t;
 	JButton id_bt, bt_trans, bt_cancel;
@@ -105,7 +104,7 @@ public class JoinForm extends JPanel implements ActionListener {
 		log2 = new JLabel("회원정보를 입력해 주세요.", JLabel.CENTER);
 		// 이미지 url 얻어오기
 		try {
-			URL url = this.getClass().getResource("/icon_find_sally.png");
+			URL url = new URL("http://localhost:9090/data/icon_find_sally.png");
 			image = ImageIO.read(url);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -138,12 +137,9 @@ public class JoinForm extends JPanel implements ActionListener {
 		// Password
 		pw_la = new JLabel("비밀번호");
 		p3.add(pw_la);
-<<<<<<< HEAD
 		pw_t = new JPasswordField("비밀번호", 15);
 		pw_t.addMouseListener(new MyMouseListener());
-=======
-		pw_t = new JPasswordField("", 15);
->>>>>>> 33f4970f24461424eefaa48d4d80da40118dcf31
+
 		p3.add(pw_t);
 		add(p3);
 
@@ -158,7 +154,7 @@ public class JoinForm extends JPanel implements ActionListener {
 		p_can2.setBackground(Color.WHITE);
 		// 이미지 url 얻어오기
 		try {
-			URL url = this.getClass().getResource("/nick.png");
+			URL url = new URL("http://localhost:9090/data/nick.png");
 			image2 = ImageIO.read(url);
 		} catch (IOException e) {
 			e.printStackTrace();
