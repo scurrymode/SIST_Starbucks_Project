@@ -9,18 +9,15 @@ public class MemberProtocol {
 		this.member=member;
 		sb.append("{");
 		sb.append("\"requestType\":\"member\",");
-		sb.append("\"member_id\":"+member.getMember_id()+",");
-		sb.append("\"member_login_id\":"+ member.getMember_login_id()+","); 
-		sb.append("\"member_login_pw\":"+member.getMember_login_pw()+",");
-		sb.append("\"member_name\":"+member.getMember_name()+",");
-		sb.append("\"member_nickname\":"+member.getMember_nickname()+",");
-		sb.append("\"member_gender\":"+member.getMember_gender()+",");
-		sb.append("\"member_phone\":"+member.getMember_phone()+",");
-		sb.append("\"member_birth\":"+member.getMember_birth()+",");
-		sb.append("\"member_coupon\":"+member.getMember_coupon()+" ");
+		sb.append("\"member_login_id\":\""+member.getMember_login_id()+"\",");
+		sb.append("\"member_login_pw\":\""+member.getMember_login_pw()+"\",");
+		sb.append("\"member_name\":\""+member.getMember_name()+"\",");
+		sb.append("\"member_nickname\":\""+member.getMember_nickname()+"\",");
+		sb.append("\"member_phone\":\""+member.getMember_phone()+"\",");
+		sb.append("\"member_birth\":\""+member.getMember_birth()+"\",");
 		sb.append("}");
 	}
-	public StringBuffer getProtocol(){
-		return sb;
+	public String getProtocol(){
+		return sb.toString();
 	}
 }
