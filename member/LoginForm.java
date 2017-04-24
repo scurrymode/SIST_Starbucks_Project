@@ -10,6 +10,8 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -34,7 +36,7 @@ import javax.swing.text.StyledDocument;
 import client.ClientMain;
 import db.DBManager;
 
-public class LoginForm extends JPanel implements ActionListener {
+public class LoginForm extends JPanel implements ActionListener, FocusListener {
 	MemberWindow memberWindow;
 	JPanel container;
 	JPanel p_north;
@@ -86,11 +88,9 @@ public class LoginForm extends JPanel implements ActionListener {
 		// can_center.setPreferredSize(new Dimension(135, 135));
 
 		t_id = new JTextField("ID입력", 20);
-		t_id.addMouseListener(new MyMouseListener());
 		t_id.setPreferredSize(new Dimension(380, 35));
 		t_pw = new JPasswordField("PW입력", 20);
-		t_pw.setEchoChar((char)0);
-		t_pw.addMouseListener(new MyMouseListener());
+		t_pw.setEchoChar((char) 0);
 		t_pw.setPreferredSize(new Dimension(380, 35));
 
 		// south
@@ -148,6 +148,12 @@ public class LoginForm extends JPanel implements ActionListener {
 		bt_join.addActionListener(this);
 
 		setPreferredSize(new Dimension(400, 650));
+
+		// 이벤트 연결
+
+		t_id.addFocusListener(this);
+		t_pw.addFocusListener(this);
+		t_pw.setEchoChar((char) 0);
 	}
 
 	public void joinCheck() {
@@ -254,24 +260,46 @@ public class LoginForm extends JPanel implements ActionListener {
 	// JOptionPane.showMessageDialog(this, "로그인 정보가 올바르지 않습니다");
 	// }
 
-	class MyMouseListener extends MouseAdapter {
-		@Override
-		public void mouseClicked(MouseEvent e) {
-			if (e.getSource() == t_id) {
-				t_id.setText("");
-			} else if (e.getSource() == t_pw) {
-				t_pw.setEchoChar('♥');
-				t_pw.setText("");
-			}
-		}
-	}
-
 	public void actionPerformed(ActionEvent e) {
 		Object obj = e.getSource();
 		if (obj == bt_login) {
 			loginCheck();
 		} else if (obj == bt_join) {
 			joinCheck();
+		}
+	}
+
+	@Override
+	public void focusGained(FocusEvent e) {
+		Object obj = e.getSource();
+		if (obj == t_id) {
+			if (t_id.getText().equals("ID입력")) {
+				t_id.setText("");
+				t_id.setForeground(Color.BLACK);
+			}
+		} else if (obj == t_pw) {
+			t_pw.setEchoChar('*');
+			if (t_pw.getText().equals("PW입력")) {
+				t_pw.setText("");
+				t_pw.setForeground(Color.BLACK);
+			}
+		}
+	}
+
+	@Override
+	public void focusLost(FocusEvent e) {
+		Object obj = e.getSource();
+		if (obj == t_id) {
+			if (t_id.getText().isEmpty()) {
+				t_id.setForeground(Color.GRAY);
+				t_id.setText("ID입력");
+			}
+		} else if (obj == t_pw) {
+			if (t_pw.getText().isEmpty()) {
+				t_pw.setForeground(Color.GRAY);
+				t_pw.setEchoChar((char) 0);
+				t_pw.setText("PW입력");
+			}
 		}
 	}
 
