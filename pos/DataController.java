@@ -1,5 +1,6 @@
 package pos;
 
+import java.awt.Font;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,6 +10,13 @@ import java.util.Vector;
 
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.AbstractTableModel;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DefaultPieDataset;
 
 import db.DBManager;
 
@@ -217,5 +225,94 @@ public class DataController{
 				}
 			}
 		}	
+	}
+	
+	
+	public void addDB(Vector<Vector> data){
+		this.data= data;
+		PreparedStatement pstmt =null;
+		ResultSet rs = null;
+		String sql2 = "select goods_id from goods";
+		String sql= "insert into goods(goods_name,goods_quantity,goods_company) values(?,?,?)";
+		String up_sql = "update goods set goods_quantity = ?  where goods_id= ?";
+		try {
+			pstmt = con.prepareStatement(sql2);
+			rs = pstmt.executeQuery();
+			int count=0;
+			while(rs.next()){
+				count++;
+			}
+			int n =data.size()-count;
+			for(int i=0;i<count;i++){
+				pstmt = con.prepareStatement(up_sql);
+				pstmt.setString(1, (String) data.get(i).get(2));
+				pstmt.setString(2, (String) data.get(i).get(0));
+				int result = pstmt.executeUpdate();
+				if(result==1){
+					System.out.println("디비수정성공");
+				}
+			}
+			if(n>0){
+				for(int i=count;i<data.size();i++){
+					  System.out.println(data.get(i).get(1));	
+					  pstmt =con.prepareStatement(sql);
+					  pstmt.setString(1, (String) data.get(i).get(1));
+					  pstmt.setString(2, (String) data.get(i).get(2));
+					  pstmt.setString(3, (String) data.get(i).get(3));
+					  pstmt.execute();
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			if(rs!=null){
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}if(pstmt!=null){
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	public ChartPanel makeChat(String str){
+		JFreeChart chart=null;
+		StringBuffer sb= new StringBuffer();
+		String sql=null;
+		String title = "";
+		if(str.equals("일별매출액")){
+			sql ="select  sum(p.product_price),DATE_FORMAT(s.sales_date,'%Y-%m-%d')  from sales s INNER JOIN product p on s.product_id=p.product_id group by DATE_FORMAT(s.sales_date,'%Y-%m-%d')";
+			title="일별 매출액";
+		}else if(str.equals("상품판매량")){
+			sql = "select count(s.product_id),p.product_name from sales s INNER JOIN product p on s.product_id=p.product_id GROUP BY p.product_name";
+			title="상품총판매량";
+		}
+		PreparedStatement pstmt= null;
+		DefaultCategoryDataset dataSet= new DefaultCategoryDataset();
+		ResultSet rs =null;
+		try {
+			pstmt =con.prepareStatement(sql);
+			rs=pstmt.executeQuery();
+			while(rs.next()){
+				dataSet.addValue(rs.getInt(1),title, rs.getString(2));
+			}
+			chart = ChartFactory.createBarChart(title,null, null, dataSet,  PlotOrientation.VERTICAL, true, true, false);
+			Font oldtitle = chart.getTitle().getFont();
+			chart.getTitle().setFont(new Font("굴림",oldtitle.getStyle(), oldtitle.getSize()));
+			Font oldlegend = chart.getLegend().getItemFont();
+			chart.getLegend().setItemFont(new Font("굴림",oldlegend.getStyle(), oldlegend.getSize()));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		ChartPanel chartPanel = new ChartPanel(chart);
+		return chartPanel;
 	}
 }

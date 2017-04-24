@@ -80,7 +80,8 @@ public class AddBoard extends JFrame implements ActionListener{
 			System.out.println(sb.toString());
 			JOptionPane.showMessageDialog(this, "게시글 등록 완료");
 			this.dispose();
-			panel.scroll.updateUI();
+			panel.setTable();
+			panel.table.updateUI();
 			
 		} catch (SQLException e) {
 			e.printStackTrace();

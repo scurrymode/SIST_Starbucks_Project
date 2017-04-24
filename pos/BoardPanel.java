@@ -51,6 +51,7 @@ public class BoardPanel extends JPanel implements ActionListener{
 	
 	public void setTable(){
 		BoardTableModel model = new BoardTableModel(board_list);
+		
 		table = new JTable(model);
 		scroll = new JScrollPane(table);
 		table.addMouseListener(new MouseAdapter() {
@@ -90,7 +91,6 @@ public class BoardPanel extends JPanel implements ActionListener{
 		String content = board_list.get(row).getBoard_contents();
 		JTextArea area = new JTextArea(30,50);
 		area.setText(content);
-		area.setEditable(false);
 		JScrollPane scroll = new JScrollPane(area);
 		
 		bt_back = new JButton("µÚ·Î");
