@@ -2,11 +2,14 @@ package reservation;
 
 import java.awt.BorderLayout;
 import java.awt.Choice;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,17 +19,26 @@ import java.util.Calendar;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import db.DBManager;
 import dto.Member;
 
-public class ReservationMain extends JFrame implements ActionListener{
-	JPanel p_north, p_center;
+public class ReservationMain extends JFrame implements ActionListener, ItemListener{
+	JPanel p_north, p_center, p_cal, p_south;
+	JPanel p_south_east, p_south_center;
 	Choice choice;
 	String room="1번 스터디룸";
-	JButton bt_prev, bt_next;
+	JButton bt_prev, bt_next, bt_show;
 	JLabel la;
+	
+	boolean flag;
+	URL[] url_small = new URL[3];
+	URL nowURL;
+	String selectRoom;
+	
+	
 	DBManager manager = DBManager.getInstance();
 	Connection con=manager.getConnection();
 	
@@ -56,15 +68,38 @@ public class ReservationMain extends JFrame implements ActionListener{
 	public ReservationMain(Member dto) {
 		this.dto=dto;
 		p_north = new JPanel();
+		p_north.setLayout(new BorderLayout());
+		
 		p_center = new JPanel();
+		p_cal = new JPanel();
+		p_south = new JPanel();
+		p_south_east = new JPanel();
+		p_south_center = new JPanel();
+		
+		p_south.setLayout(new BorderLayout());
+		p_south.setPreferredSize(new Dimension(600, 700));
 		//위쪽패널
 		choice = new Choice();
+		bt_show = new JButton("이미지 보기");
 		bt_prev = new JButton("<");
 		la = new JLabel("");
 		la.setFont(new Font("고딕", Font.BOLD, 20));
 		bt_next = new JButton(">");
+		
+		choice.setPreferredSize(new Dimension(100, 50));
+		p_cal.setPreferredSize(new Dimension(100, 50));
+		p_south_east.setPreferredSize(new Dimension(150, 600));
+		
+		p_south.setVisible(false);
+		
+		p_south.add(p_south_east, BorderLayout.EAST);
+		p_south.add(p_south_center);
+		
+		p_cal.add(bt_prev);
+		p_cal.add(la);
+		p_cal.add(bt_next);
 			
-		choice.addItemListener(new ItemListener() {
+		/*choice.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				Object obj = e.getItem();
 				String str = obj.toString();
@@ -73,14 +108,17 @@ public class ReservationMain extends JFrame implements ActionListener{
 				p_center.removeAll();
 				attachPanel();
 			}
-		});
+		});*/
+		choice.add("스터디룸 선택");
 		choice.add("1번 스터디룸");
 		choice.add("2번 스터디룸");
 		
-		p_north.add(choice);
-		p_north.add(bt_prev);
-		p_north.add(la);
-		p_north.add(bt_next);
+		//choice.select(1);
+		
+		p_north.add(choice, BorderLayout.WEST);
+		p_north.add(p_cal, BorderLayout.CENTER);
+		p_north.add(bt_show, BorderLayout.EAST);
+		p_north.add(p_south, BorderLayout.SOUTH);
 		
 		add(p_north, BorderLayout.NORTH);
 		
@@ -88,8 +126,11 @@ public class ReservationMain extends JFrame implements ActionListener{
 		init();
 		
 		add(p_center);
+		p_north.setPreferredSize(new Dimension(600, 50));
 		
+		choice.addItemListener(this);
 		//버튼 리스너 붙이기
+		bt_show.addActionListener(this);
 		bt_prev.addActionListener(this);
 		bt_next.addActionListener(this);
 		
@@ -192,6 +233,32 @@ public class ReservationMain extends JFrame implements ActionListener{
 		p_center.updateUI();
 	
 	}
+	
+	public void showImage() {
+		/*flag가 true이면 이미지가 보여지고 있는 상태 
+		 * false이면 이미지가 안보여지고 있는 상태*/
+		if(choice.getSelectedIndex() != 1 && choice.getSelectedIndex() != 2) {
+			JOptionPane.showMessageDialog(this, "방을 선택해 주세요!");
+		}
+		else {
+			if(flag) {
+				flag = false;
+				
+				p_south.updateUI();
+				p_south.setVisible(false);
+				p_north.setPreferredSize(new Dimension(600, 50));
+				
+			}
+			else {
+				flag = true;
+				
+				p_south.updateUI();
+				p_south.setVisible(true);
+				p_north.setPreferredSize(new Dimension(600, 750));
+			}
+ 		}
+		
+	}
 
 	public void actionPerformed(ActionEvent e) {
 		Object obj = e.getSource();
@@ -201,24 +268,65 @@ public class ReservationMain extends JFrame implements ActionListener{
 				month=11;
 				year--;
 			}
-		}else if(obj == bt_next){
+		} else if(obj == bt_next){
 			month++;
 			if(month>11){
 				month=0;
 				year++;
 			}
-		}
+		} else if(obj == bt_show) {
+			showImage();
+		} 
 		la.setText(year+"년 "+(month+1)+"월");
 		la.updateUI();
 		p_center.removeAll();
 		attachPanel();
 	}
 	
+	public void itemStateChanged(ItemEvent e) {
+		if(choice.getSelectedIndex() != 0) {
+			selectRoom = choice.getSelectedItem();
+			//smallList.removeAll(smallList);
+			p_south_east.removeAll();
+			p_south_center.removeAll();
+			try {
+				if(selectRoom.equals("1번 스터디룸")) {
+					for(int i = 0; i < url_small.length; i++) {
+						url_small[i] = new URL("http://localhost:9090/data/reserve1-"+ (i + 1)+".jpg");
+						System.out.println(url_small[i].toString());
+						
+						CreateSmallCan small = new CreateSmallCan(url_small[i], this);
+						p_south_east.add(small);
+						System.out.println("CreateSmallCan 생성 후" + url_small[i].toString());
+						//smallList.add(small);
+					}
+					
+				} else if(selectRoom.equals("2번 스터디룸")) {
+					for(int i = 0; i < url_small.length; i++) {
+						url_small[i] = new URL("http://localhost:9090/data/reserve2-"+ (i + 1)+".jpg");
+						System.out.println(url_small[i].toString());
+						
+						CreateSmallCan small = new CreateSmallCan(url_small[i], this);
+						p_south_east.add(small);
+						//smallList.add(small);
+					}
+				}
+				
+				Object obj = e.getItem();
+				String str = obj.toString();
+				//스트링에서 숫자만 추출하기
+				ReservationMain.this.roomNum=Integer.parseInt(str.replaceAll("[^0-9]",""));
+				p_center.removeAll();
+				attachPanel();
+			} catch (MalformedURLException e1) {
+				e1.printStackTrace();
+			}
+			
+		}
+	}
 	
 	public static void main(String[] args) {
-		new ReservationMain(new Member(){
-			
-		});
+		new ReservationMain(new Member());
 
 	}
 

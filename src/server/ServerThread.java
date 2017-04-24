@@ -103,6 +103,21 @@ public class ServerThread extends Thread {
 		}
 		
 	}
+	
+	public void reservationType() {
+		String type = (String) obj.get("type");
+		
+		PreparedStatement pstmt = null;
+		
+		if(type.equals("insert")) {
+			String sql = "insert into reservation(reservation_room_num, reservation_current_time, reservation_member_login_id, reservation_time_unit, reservation_start_time, reservation_year, reservation_month, reservation_date) values(?, current_timestamp(), ?, ?, ?, ?, ?, ?)";
+		} else if(type.equals("update")) {
+			String sql = "update reservation set reservation_time_unit = ? where ";
+
+		} else if(type.equals("delete")) {
+			String sql = "delete from reservation where ";
+		}
+	}
 
 	public void listen() {
 		try {
@@ -118,6 +133,9 @@ public class ServerThread extends Thread {
 			} else if(requestType.equals("card")) {
 				type = "card";
 				insertCard();
+			} else if(requestType.equals("reservation")) {
+				type = "card";
+				reservationType();
 			}
 			// 쿼리문 한번 날리고 한번 쉬자!
 			Thread.sleep(100);
@@ -137,6 +155,8 @@ public class ServerThread extends Thread {
 			str = "주문완료";
 		} else if(type.equals("card")) {
 			str = "카드등록완료";
+		} else if(type.equals("reservation")) {
+			str = "예약 완료";
 		}
 		
 		try {
