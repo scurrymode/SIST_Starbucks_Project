@@ -34,7 +34,7 @@ public class AdminPage extends JPanel{
 		tabbedPane.addTab("매출관리",new SalesPanel());
 		tabbedPane.addTab("재고관리",new GoodsPanel());
 		tabbedPane.addTab("레시피관리",new RecipePanel());
-		tabbedPane.addTab("레시피관리",new BoardPanel());
+		tabbedPane.addTab("공지사항관리",new BoardPanel(posWindow));
 		add(tabbedPane);
 		
 		setVisible(true);
