@@ -72,8 +72,8 @@ public class Member {
 		return member_birth;
 	}
 
-	public void setMember_birth(String member_birth) {
-		this.member_birth = member_birth;
+	public void setMember_birth(Object object) {
+		this.member_birth = (String) object;
 	}
 
 	public String getMember_coupon() {
