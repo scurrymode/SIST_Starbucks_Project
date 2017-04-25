@@ -44,7 +44,7 @@ public class LoginForm extends JPanel implements ActionListener ,FocusListener{
 	JLabel la_north, la_center1, la_center2;
 	JTextField t_id;
 	JPasswordField t_pw;
-	JButton bt_login, bt_join;
+	JButton bt_login;
 	Canvas can_center;
 	BufferedImage image = null;
 
@@ -65,10 +65,10 @@ public class LoginForm extends JPanel implements ActionListener ,FocusListener{
 		la_center1.setForeground(new Color(156, 136, 86));
 		la_center1.setFont(new Font("돋움", Font.BOLD, 20));
 
-		la_center2 = new JLabel("<html>마이 스타벅스 리워드 회원이 되시면 생일 무료 음료 <br> 쿠폰과 같은 다양한 리워드를 누리실 수 있습니다.<html>",
+		la_center2 = new JLabel("<html>직원아이디로 로그인 해주세요<html>",
 				JLabel.CENTER);
 		la_center2.setFont(new Font("돋움", Font.PLAIN, 13));
-
+		
 		// 이미지 url 얻어오기
 		try {
 			URL url = new URL("http://localhost:9090/data/main_login_cup01_img.png");
@@ -106,10 +106,8 @@ public class LoginForm extends JPanel implements ActionListener ,FocusListener{
 		bt_login = new JButton("로그인하기");
 		bt_login.setForeground(Color.WHITE);
 		bt_login.setBackground(new Color(123, 109, 100));
-		bt_join = new JButton("회원가입");
-		bt_join.setForeground(new Color(123, 109, 100));
-		bt_join.setBackground(Color.WHITE);
-		bt_join.setBorderPainted(false);
+		
+	
 
 		// add
 		p_north.add(la_north);
@@ -121,7 +119,7 @@ public class LoginForm extends JPanel implements ActionListener ,FocusListener{
 		p_center.add(t_pw);
 
 		p_south.add(bt_login);
-		p_south.add(bt_join);
+	
 
 		add(container);
 
@@ -147,11 +145,11 @@ public class LoginForm extends JPanel implements ActionListener ,FocusListener{
 
 		p_south.setLayout(null);
 		bt_login.setBounds(10, 0, 380, 40);
-		bt_join.setBounds(10, 55, 380, 20);
+	
 
 		// 버튼 연결
 		bt_login.addActionListener(this);
-		bt_join.addActionListener(this);
+	
 
 		setPreferredSize(new Dimension(400, 650));
 

@@ -1,5 +1,6 @@
 package pos;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -124,6 +125,7 @@ public class DataController{
 	}
 	public void SearchEmp(){
 		String str ="";
+		System.out.println(myPanel.choice.getSelectedItem());
 		if(myPanel.choice.getSelectedItem().equals("¿Ã∏ß")){
 			str = "emp_name";
 		}else{
@@ -156,7 +158,7 @@ public class DataController{
 			e.printStackTrace();
 		}
 	}
-	/*
+	
 	public void SearchMember(){
 		String str ="";
 		System.out.println(myPanel.choice.getSelectedItem());
@@ -193,7 +195,7 @@ public class DataController{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-	}*/
+	}
 	
 	public void editTable(DataModel model,TableModelEvent e,String type){
 		

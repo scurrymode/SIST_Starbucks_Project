@@ -61,8 +61,18 @@ public class BoardPanel extends JPanel implements ActionListener{
 				board_list.get(row).setBoard_count(board_list.get(row).getBoard_count()+1);
 				showContent(row);
 				new BoardCount(board_list.get(row));
+<<<<<<< HEAD
 		}
 
+=======
+			}
+		});
+	}
+	public void updateTable(){
+		BoardTableModel model = new BoardTableModel(board_list);
+		table.setModel(model);
+	}
+>>>>>>> 632193839895d5ee927d1907ac6090f3191f698c
 	
 	public void showContent(int row){
 		p_main.removeAll();
