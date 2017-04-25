@@ -66,18 +66,14 @@ public class OrderMain extends JPanel implements ActionListener,Runnable{
 	PosWindow posWindow;
 	int total;
 	int order_number=1;
+
 	JButton obj;
 	private Iterator<String> songIterator;
-	
+
 
 	public OrderMain(PosWindow posWindow) {
 		this.posWindow =posWindow;
 		p_date=new JPanel();
-
-		this.posWindow =posWindow;
-		p_date=new JPanel();
-
-
 		p_east=new JPanel();
 		p_west=new JPanel();
 		p_pos=new JPanel();
