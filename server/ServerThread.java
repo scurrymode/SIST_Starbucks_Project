@@ -119,6 +119,56 @@ public class ServerThread extends Thread {
 		}
 	}
 
+	public void EditMember() {
+ 		PreparedStatement pstmt = null;
+ 		String id = (String) obj.get("member_login_id");
+ 		id.replace(" ", "");
+ 		System.out.println("하하"+id);
+ 		String sql = "update member set member_login_pw =?  where member_login_id='"+id+"'";
+ 		try {
+ 			//비번수정
+ 			System.out.println(sql);
+ 			pstmt = con.prepareStatement(sql);
+ 			pstmt.setString(1, (String)obj.get("member_login_pw"));
+ 			int pw =  pstmt.executeUpdate();
+ 			
+ 			sql = "update member set member_name =?   where member_login_id='"+id+"'";
+ 			pstmt = con.prepareStatement(sql);
+ 			pstmt.setString(1, (String)obj.get("member_name"));
+ 			int name = pstmt.executeUpdate();
+ 			
+ 			sql = "update member set member_nickname =?  where member_login_id='"+id+"'";
+ 			pstmt = con.prepareStatement(sql);
+ 			pstmt.setString(1, (String)obj.get("member_nickname"));
+ 			int nickname = pstmt.executeUpdate();
+ 			
+ 			sql = "update member set member_birth =?  where member_login_id='"+id+"'";
+ 			pstmt = con.prepareStatement(sql);
+ 			pstmt.setString(1, (String)obj.get("member_birth"));
+ 			int birth= pstmt.executeUpdate();
+ 			
+ 			sql = "update member set member_phone =?   where member_login_id='"+id+"'";
+ 			pstmt = con.prepareStatement(sql);
+ 			pstmt.setString(1, (String)obj.get("member_phone"));
+ 			int phone = pstmt.executeUpdate();
+ 			
+ 			System.out.println("여긴들어오나");
+ 			send();
+ 			System.out.println(pw);
+ 			System.out.println(name);
+ 			System.out.println(nickname);
+ 			System.out.println(birth);
+ 			System.out.println(phone);
+ 			if(pw != 0 && name !=0 && nickname !=0 && birth !=0 && phone !=0) {
+ 				System.out.println("성공");
+ 			}
+ 		} catch (SQLException e) {
+ 			e.printStackTrace();
+ 		}finally{
+ 			System.out.println("들어오긴하니");
+ 		}
+ 	}
+	
 	public void listen() {
 		try {
 			String data = buffr.readLine();
@@ -136,6 +186,9 @@ public class ServerThread extends Thread {
 			} else if(requestType.equals("reservation")) {
 				type = "card";
 				reservationType();
+			} else if(requestType.equals("member")){
+				type = "member";
+				EditMember();
 			}
 			// 쿼리문 한번 날리고 한번 쉬자!
 			Thread.sleep(100);
@@ -157,7 +210,9 @@ public class ServerThread extends Thread {
 			str = "카드등록완료";
 		} else if(type.equals("reservation")) {
 			str = "예약 완료";
-		}
+		} else if(type.equals("member")) {
+			str = "회원수정완료";
+		} 
 		
 		try {
 			buffw.write(str + "\n");

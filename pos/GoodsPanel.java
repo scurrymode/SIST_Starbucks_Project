@@ -41,8 +41,9 @@ public class GoodsPanel extends MyPanel implements ActionListener,TableModelList
 	Vector<String> columnName;
 	Vector<Vector> data;
 	Vector<String> vec;
+	boolean flag=true;
+	DataModel model2;
 	
-
 	public GoodsPanel() {
 		t_search = new JTextField(20);
 		la_name =new JLabel("이름");
@@ -130,6 +131,7 @@ public class GoodsPanel extends MyPanel implements ActionListener,TableModelList
 		//파일 업로드하기!
 		int result = chooser.showOpenDialog(this);
 		File file = chooser.getSelectedFile();
+		flag=false;
 		//컬럼네임용 벡터
 		columnName = new Vector<String>();
 		//컬럼데이터용 벡터
@@ -168,21 +170,11 @@ public class GoodsPanel extends MyPanel implements ActionListener,TableModelList
 					}
 				}
 				//테이블 다시 만들기!
-				table.setModel(new AbstractTableModel() {
-					public int getRowCount() {
-						return GoodsPanel.this.data.size();
-					}
-					public int getColumnCount() {
-						return GoodsPanel.this.columnName.size();
-					}
-					public String getColumnName(int col) {
-						return GoodsPanel.this.columnName.get(col);
-					}
-					public Object getValueAt(int rowIndex, int columnIndex) {
-						return GoodsPanel.this.data.get(rowIndex).get(columnIndex);
-					}
-
-				});
+				
+				model2=  new DataModel(data, columnName);
+				dataController.addDB(data);
+				model2.addTableModelListener(this);
+				table.setModel(model2);
 				table.updateUI();
 				
 			} catch (FileNotFoundException e) {
@@ -194,7 +186,6 @@ public class GoodsPanel extends MyPanel implements ActionListener,TableModelList
 		//나중에 디비 변경하는거 추가해야함~~!
 	}
 	
-	
 	public void regist(){
 		//System.out.println(dataController.data.get(1).get(1));
 		JOptionPane.showMessageDialog(this, "회원 계정 등록");
@@ -203,6 +194,10 @@ public class GoodsPanel extends MyPanel implements ActionListener,TableModelList
 	public void tableChanged(TableModelEvent e) {
 		int row = e.getFirstRow();
 		int col = e.getColumn();
-		dataController.editTable(model,e,"goods");
+		if(flag){
+			dataController.editTable(model,e,"goods");
+		}else{
+			dataController.editTable(model2,e,"goods");
+		}
 	}
 }

@@ -9,28 +9,21 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import db.DBManager;
-import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.player.advanced.AdvancedPlayer;
 import order.payment.Payment;
 import pos.login.PosWindow;
 
@@ -53,12 +46,17 @@ public class OrderMain extends JPanel implements ActionListener,Runnable{
 	PosWindow posWindow;
 	int total;
 	int order_number=1;
+<<<<<<< HEAD:src/order/main/OrderMain.java
 	/*
 <<<<<<< HEAD
+=======
+	
+>>>>>>> starbucks/master:order/main/OrderMain.java
 
 	public OrderMain(PosWindow posWindow) {
 		this.posWindow =posWindow;
 		p_date=new JPanel();
+<<<<<<< HEAD:src/order/main/OrderMain.java
 	}
 	public OrderMain() {
 =======*/
@@ -66,6 +64,10 @@ public class OrderMain extends JPanel implements ActionListener,Runnable{
 		this.posWindow =posWindow;
 		p_date=new JPanel();
 
+=======
+
+
+>>>>>>> starbucks/master:order/main/OrderMain.java
 		p_east=new JPanel();
 		p_west=new JPanel();
 		p_pos=new JPanel();
