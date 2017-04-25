@@ -90,6 +90,7 @@ public class ClientEdit extends JPanel implements FocusListener,ActionListener{
 	
 		t_name.setText(member.getMember_name());
 		t_nick.setText(member.getMember_nickname());
+		t_coupon.setText(member.getMember_coupon());
 		
 		p_container.setBounds(100,100,300,630);
 		p_content.setBackground(Color.white);

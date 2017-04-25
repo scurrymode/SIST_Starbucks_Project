@@ -1,6 +1,7 @@
 package pos;
 
 import java.awt.Choice;
+import java.awt.Color;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -24,5 +25,9 @@ public class MyPanel extends JPanel{
 		p_north = new JPanel();
 		choice.add("¿Ã∏ß");
 		choice.add("ID");
+		table.setBackground(Color.white);
+		setBackground(Color.white);
+		p_south.setBackground(new Color(0,114, 67));
+		p_north.setBackground(Color.white);
 	}
 }

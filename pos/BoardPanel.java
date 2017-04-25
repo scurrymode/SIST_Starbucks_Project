@@ -64,6 +64,10 @@ public class BoardPanel extends JPanel implements ActionListener{
 			}
 		});
 	}
+	public void updateTable(){
+		BoardTableModel model = new BoardTableModel(board_list);
+		table.setModel(model);
+	}
 	
 	public void showContent(int row){
 		p_main.removeAll();
