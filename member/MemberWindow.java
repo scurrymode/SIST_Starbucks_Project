@@ -31,9 +31,7 @@ public class MemberWindow extends JFrame {
 		add(page[2]);
 
 		setPage(0);
-
 		setVisible(true);
-
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 
@@ -55,5 +53,4 @@ public class MemberWindow extends JFrame {
 	public static void main(String[] args) {
 		new MemberWindow();
 	}
-
 }
