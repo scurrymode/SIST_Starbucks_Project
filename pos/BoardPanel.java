@@ -18,7 +18,6 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 
 import board.BoardCount;
-import board.BoardMain;
 import board.BoardTableModel;
 import dto.Board;
 import pos.login.PosWindow;
@@ -50,6 +49,7 @@ public class BoardPanel extends JPanel implements ActionListener{
 	}
 	
 	public void setTable(){
+
 		BoardTableModel model = new BoardTableModel(board_list);
 		
 		table = new JTable(model);
@@ -61,16 +61,26 @@ public class BoardPanel extends JPanel implements ActionListener{
 				board_list.get(row).setBoard_count(board_list.get(row).getBoard_count()+1);
 				showContent(row);
 				new BoardCount(board_list.get(row));
+
 			}
 		});
 	}
+	
 	public void updateTable(){
 		BoardTableModel model = new BoardTableModel(board_list);
 		table.setModel(model);
 	}
-	
+
 	public void showContent(int row){
 		p_main.removeAll();
+
+		
+		String str ="게시번호: "+board_list.get(row).getBoard_id();
+		str+="제목: "+ board_list.get(row).getBoard_title();
+		str+="작성자: "+ board_list.get(row).getBoard_emp_name();
+		str+="조회수: "+ board_list.get(row).getBoard_count();
+		JLabel la_top = new JLabel(str);		
+
 		Font font = new Font("돋움", Font.BOLD, 15);
 		Font font_title = new Font("돋움", Font.BOLD, 35);
 		JPanel p_title = new JPanel();
@@ -95,11 +105,14 @@ public class BoardPanel extends JPanel implements ActionListener{
 		String content = board_list.get(row).getBoard_contents();
 		JTextArea area = new JTextArea(30,50);
 		area.setText(content);
+
 		JScrollPane scroll = new JScrollPane(area);
 		
 		bt_back = new JButton("뒤로");
 		bt_back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				BoardPanel.this.p_main.removeAll();
+				BoardPanel.this.p_main.add(BoardPanel.this.scroll);
 				BoardPanel.this.setPreferredSize(new Dimension(300*2+100, 700));
 				BoardPanel.this.p_main.removeAll();
 				//테이블을 새로 그리고 해야한다.
@@ -109,15 +122,20 @@ public class BoardPanel extends JPanel implements ActionListener{
 				BoardPanel.this.p_main.updateUI();
 			}
 		});
-		
+	
+
+		p_main.add(la_top);
 		p_main.add(p_title);
 		p_main.add(p_info);
 		p_main.add(scroll);
+
 		p_main.add(bt_back);
 		p_main.updateUI();
 	}
 
+
 	public void actionPerformed(ActionEvent e) {
 		new AddBoard(posWindow, this);
 	}
+
 }

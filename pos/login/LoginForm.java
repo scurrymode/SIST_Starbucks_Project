@@ -94,7 +94,13 @@ public class LoginForm extends JPanel implements ActionListener ,FocusListener{
 
 		// south
 		p_south = new JPanel();
+
+	
+		t_id = new JTextField("jangs", 15);
+		t_pw = new JPasswordField("1234", 15);
+		bt_login = new JButton("로그인");
 		p_south.setBackground(Color.WHITE);
+
 
 		bt_login = new JButton("로그인하기");
 		bt_login.setForeground(Color.WHITE);
@@ -146,11 +152,15 @@ public class LoginForm extends JPanel implements ActionListener ,FocusListener{
 
 		setPreferredSize(new Dimension(400, 650));
 
+		setPreferredSize(new Dimension(400, 100));
+		//setBackground(Color.PINK);
+
 		// 이벤트 연결
 
 		t_id.addFocusListener(this);
 		t_pw.addFocusListener(this);
 		t_pw.setEchoChar((char) 0);
+
 	}
 
 	public void joinCheck() {

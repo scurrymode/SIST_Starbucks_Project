@@ -2,6 +2,14 @@
 <classpath>
 	<classpathentry kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+<<<<<<< HEAD
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Starbucks"/>
+=======
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/StarBucks"/>
+<<<<<<< HEAD
+=======
+>>>>>>> a62fe8b0fbd84447462d94ab169199764cf0f0cd
+>>>>>>> 1b5487e27e80173be720120a7755fa1c04d5db7a
+>>>>>>> c4729145ac314e006448baee969974d467927758
 	<classpathentry kind="output" path="bin"/>
 </classpath>
