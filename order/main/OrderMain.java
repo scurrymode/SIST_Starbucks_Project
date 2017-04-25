@@ -46,28 +46,10 @@ public class OrderMain extends JPanel implements ActionListener,Runnable{
 	PosWindow posWindow;
 	int total;
 	int order_number=1;
-<<<<<<< HEAD:src/order/main/OrderMain.java
-	/*
-<<<<<<< HEAD
-=======
-	
->>>>>>> starbucks/master:order/main/OrderMain.java
 
 	public OrderMain(PosWindow posWindow) {
 		this.posWindow =posWindow;
 		p_date=new JPanel();
-<<<<<<< HEAD:src/order/main/OrderMain.java
-	}
-	public OrderMain() {
-=======*/
-	public OrderMain(PosWindow posWindow) {
-		this.posWindow =posWindow;
-		p_date=new JPanel();
-
-=======
-
-
->>>>>>> starbucks/master:order/main/OrderMain.java
 		p_east=new JPanel();
 		p_west=new JPanel();
 		p_pos=new JPanel();
