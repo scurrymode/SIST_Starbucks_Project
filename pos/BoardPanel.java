@@ -61,19 +61,16 @@ public class BoardPanel extends JPanel implements ActionListener{
 				board_list.get(row).setBoard_count(board_list.get(row).getBoard_count()+1);
 				showContent(row);
 				new BoardCount(board_list.get(row));
-<<<<<<< HEAD
-		}
 
-=======
 			}
 		});
 	}
+	
 	public void updateTable(){
 		BoardTableModel model = new BoardTableModel(board_list);
 		table.setModel(model);
 	}
->>>>>>> 632193839895d5ee927d1907ac6090f3191f698c
-	
+
 	public void showContent(int row){
 		p_main.removeAll();
 
@@ -83,8 +80,6 @@ public class BoardPanel extends JPanel implements ActionListener{
 		str+="ÀÛ¼ºÀÚ: "+ board_list.get(row).getBoard_emp_name();
 		str+="Á¶È¸¼ö: "+ board_list.get(row).getBoard_count();
 		JLabel la_top = new JLabel(str);		
-		String content = board_list.get(row).getBoard_contents();
-		JTextArea area = new JTextArea(content);
 
 		Font font = new Font("µ¸¿ò", Font.BOLD, 15);
 		Font font_title = new Font("µ¸¿ò", Font.BOLD, 35);

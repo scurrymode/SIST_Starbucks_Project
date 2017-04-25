@@ -15,7 +15,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import dto.Reservation;
-import json.ReservationProtocol;
 
 public class Reserving extends JFrame implements ActionListener{
 	JPanel p_center, p_south;

@@ -95,8 +95,7 @@ public class LoginForm extends JPanel implements ActionListener ,FocusListener{
 		// south
 		p_south = new JPanel();
 
-		la_id = new JLabel("ID");
-		la_pw = new JLabel("Password");
+	
 		t_id = new JTextField("jangs", 15);
 		t_pw = new JPasswordField("1234", 15);
 		bt_login = new JButton("·Î±×ÀÎ");

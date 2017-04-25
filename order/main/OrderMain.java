@@ -9,15 +9,13 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-<<<<<<< HEAD
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
-=======
->>>>>>> 632193839895d5ee927d1907ac6090f3191f698c
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -38,14 +36,13 @@ import javax.swing.JScrollPane;
 import com.sun.media.jfxmedia.MediaError;
 
 import db.DBManager;
-<<<<<<< HEAD
+
 import javafx.collections.FXCollections;
 import javafx.scene.media.MediaPlayer.Status;
 import javafx.stage.Stage;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.advanced.AdvancedPlayer;
-=======
->>>>>>> 632193839895d5ee927d1907ac6090f3191f698c
+
 import order.payment.Payment;
 import pos.login.PosWindow;
 
@@ -74,17 +71,13 @@ public class OrderMain extends JPanel implements ActionListener,Runnable{
 	
 
 	public OrderMain(PosWindow posWindow) {
-<<<<<<< HEAD
-		
 		this.posWindow =posWindow;
 		p_date=new JPanel();
 
-=======
 		this.posWindow =posWindow;
 		p_date=new JPanel();
 
 
->>>>>>> 632193839895d5ee927d1907ac6090f3191f698c
 		p_east=new JPanel();
 		p_west=new JPanel();
 		p_pos=new JPanel();
