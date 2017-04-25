@@ -117,12 +117,13 @@ public class BoardPanel extends JPanel implements ActionListener{
 				BoardPanel.this.p_main.updateUI();
 			}
 		});
-		
+	
 
 		p_main.add(la_top);
 		p_main.add(p_title);
 		p_main.add(p_info);
 		p_main.add(scroll);
+
 		p_main.add(bt_back);
 		p_main.updateUI();
 	}
