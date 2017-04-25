@@ -1,6 +1,5 @@
-package card;
+package reservation;
 
-import java.awt.Font;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -8,16 +7,14 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Vector;
 
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
+import dto.Reservation;
+import json.ReservationProtocol;
 
-import dto.Card;
-import json.CardProtocol;
-
-public class CardThread extends Thread{
-	Card card;
-	CardInputMain main;
+public class ReservationThread extends Thread{
+	Vector<Reservation> resList;
+	String type;
 	
 	Socket socket;
 	int port = 7777;
@@ -26,9 +23,9 @@ public class CardThread extends Thread{
 	BufferedReader buffr;
 	BufferedWriter buffw;
 	
-	public CardThread(Card card, CardInputMain main) {
-		this.card = card;
-		this.main = main;
+	public ReservationThread(Vector<Reservation> resList, String type) {
+		this.resList = resList;
+		this.type = type;
 		
 		try {
 			socket = new Socket(host, port);
@@ -53,11 +50,8 @@ public class CardThread extends Thread{
 		try {
 			String data = buffr.readLine();
 			
-			if(data.equals("카드등록완료")){
-				JOptionPane.showMessageDialog(main, "카드 등록 성공!");
-				main.dispose();
-				main.main.dispose();
-				main.main.main.getList();
+			if(data.equals("")){
+				
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -65,16 +59,18 @@ public class CardThread extends Thread{
 	}
 	
 	public void send() {
-		CardProtocol protocol = new CardProtocol(card);
-		String msg = protocol.getProtocol();
-		
-		try {
-			buffw.write(msg+"\n");
-			buffw.flush();
-			System.out.println(msg + " 카드 등록");
-		} catch (IOException e) {
-			e.printStackTrace();
+		for(int i = 0; i < resList.size(); i++) {
+			ReservationProtocol protocol = new ReservationProtocol(resList.get(i), type);
+			String msg = protocol.getProtocol();
+			
+			try {
+				buffw.write(msg+"\n");
+				buffw.flush();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
+		
 	}
 
 }

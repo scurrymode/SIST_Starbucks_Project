@@ -68,12 +68,20 @@ public class OrderMain extends JPanel implements ActionListener,Runnable{
 	JButton obj;
 	private Iterator<String> songIterator;
 	
+<<<<<<< HEAD
+
+	public OrderMain(PosWindow posWindow) {
+		this.posWindow =posWindow;
+		p_date=new JPanel();
+	}
+	public OrderMain() {
+=======
 	public OrderMain(PosWindow posWindow) {
 		
 		this.posWindow =posWindow;
 		p_date=new JPanel();
 
-
+>>>>>>> 403b09277239ebf26ae63df45e23c78242e5d99d
 		p_east=new JPanel();
 		p_west=new JPanel();
 		p_pos=new JPanel();
@@ -468,7 +476,7 @@ public class OrderMain extends JPanel implements ActionListener,Runnable{
 		System.out.println("Àç»ý");
 		music=new MusicThread();
 		music.run();
-		
+		music.r
 		music.start();
 		
 	}
