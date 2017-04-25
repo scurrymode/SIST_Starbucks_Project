@@ -19,7 +19,6 @@ import card.CardListMain;
 import db.DBManager;
 import dto.Member;
 import dto.Product;
-import member.MemberWindow;
 
 public class ClientMain extends JPanel implements ActionListener{
 	//메인 화면~!
